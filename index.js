@@ -19,7 +19,7 @@ import AdmZip from 'adm-zip';
 import * as shortcuts from 'windows-shortcuts';
 
 // Globals
-const version = "1.2.10";
+const version = "1.2.11";
 const userHomeDir = homedir();
 let configJSON;
 let timberbornPath;
@@ -289,7 +289,7 @@ async function viewConfig() {
     message: chalk.magentaBright('Please select the configuration parameter you wish to change\n'),
     choices: [...Object.keys(configJSON), new inquirer.Separator(), ...["Back to Main Menu"]]
   });
-  console.log(configSelected);
+  console.log(`Selected: ${configSelected}. Editing is not yet implemented`);
 }
 
 
@@ -435,7 +435,7 @@ async function sliceCreateStoreFile() {
   fileID = generateFileID();
   const spinner = createSpinner(`Creating entity store file...`).start();
   try {
-    fs.writeFile(`./entityStore/${fileID} ${sliceSelectedMap.replace(/\.[^/.]+$/, ".json")}`, JSON.stringify(worldEntitiesToExtract), 'utf8', (err) => {
+    fs.writeFile(`./entityStore/${fileID} ${sliceSelectedMap.replace(/^U_/,"").replace(/^(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )/,"").replace(/\.[^/.]+$/, ".json")}`, JSON.stringify(worldEntitiesToExtract), 'utf8', (err) => {
       if (err) {
         spinner.error({ text: `Failed to create entity store file\n${err}` });
         return false;
@@ -480,7 +480,7 @@ async function sliceSaveWorld() {
     // Add world.json file
     zip.addFile("world.json", Buffer.from(JSON.stringify(newWorldJSON), "utf-8"));
     // Write .timber file
-    zip.writeZip(`${timberbornMapPath}/${fileID} ${sliceSelectedMap}`);
+    zip.writeZip(`${timberbornMapPath}/${fileID} ${sliceSelectedMap.replace(/^U_/,"").replace(/^(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )/,"")}`);
 
     spinner.success({ text: `New world file saved` });
     return true;
@@ -649,8 +649,7 @@ async function unsliceSaveWorld() {
     // Add world.json file
     zip.addFile("world.json", Buffer.from(JSON.stringify(unsliceNewWorldJSON), "utf-8"));
     // Write .timber file
-    let newFileName = unsliceSelectedMap.replace(/^(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )/,"");
-    newFileName = newFileName.replace(/^(U_)/,"");
+    let newFileName = unsliceSelectedMap.replace(/^U_/,"").replace(/^(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )/,"");
     zip.writeZip(`${timberbornMapPath}/U_${unsliceFileID} ${newFileName}`);
 
     spinner.success({ text: `New world file saved` });
@@ -738,6 +737,8 @@ async function helpHelp() {
   console.log(`
     ${chalk.bgRedBright(' Help Command                                                                                 ')}
     That's... how you got here...
+
+    ...But it's good to double-check, I guess...
   `);
 }
 // Show config help page
@@ -746,6 +747,10 @@ async function helpHelp() {
 async function helpConfig() {
   console.log(`
     ${chalk.bgRedBright(' Config Command                                                                               ')}
+    Used to view and change the configuration for application variables.
+
+    ${chalk.redBright('CONF_TIMBERBORN_PATH:')}\t The path of your Timberborn user files
+    ${chalk.redBright('CONF_TIMBERBORN_MAP_PATH:')}\t The path of your Timberborn map folder
   `);
 }
 
