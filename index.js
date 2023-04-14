@@ -21,7 +21,7 @@ import AdmZip from 'adm-zip';
 import * as shortcuts from 'windows-shortcuts';
 
 // Globals
-const version = "1.2.7";
+const version = "1.2.10";
 const userHomeDir = homedir();
 let configJSON;
 let timberbornPath;
@@ -258,7 +258,7 @@ function validateConfig(inputConfig) {
 Used to view the config details and then ask if the user to change the config
 */
 async function viewConfig() {
-  
+
 }
 
 
