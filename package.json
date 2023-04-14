@@ -16,6 +16,7 @@
     "type": "git",
     "url": "https://github.com/BatterySmooth/MapSlicer-CLI"
   },
+  "homepage": "https://github.com/BatterySmooth/MapSlicer-CLI#readme",
   "license": "MIT",
   "dependencies": {
     "adm-zip": "^0.5.10",
