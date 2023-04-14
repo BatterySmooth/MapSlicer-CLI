@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 
-// Load .env file
-// import { config } from 'dotenv';
-// const result = config();
+// Width: 102
+// Height: 32
 
 // Imports
 import { homedir } from 'os'
 import * as fs from 'fs';
-import fsPromises from 'fs/promises'
+// import fsPromises from 'fs/promises'
 import * as path from 'path';
 
 // Node packages
@@ -15,7 +14,6 @@ import chalk from 'chalk';
 import inquirer from 'inquirer';
 import gradient from 'gradient-string';
 import chalkAnimation from 'chalk-animation';
-import figlet from 'figlet';
 import { createSpinner } from 'nanospinner';
 import AdmZip from 'adm-zip';
 import * as shortcuts from 'windows-shortcuts';
@@ -36,12 +34,15 @@ const sleep = (ms) => new Promise ((r) => setTimeout(r, ms));
 */
 async function printHeader() {
   console.clear();
-  const titleText = `MapSlicer-CLI`;
-  figlet(titleText, (err, data) => {
-    console.log(gradient.pastel.multiline(data));
-  });
-  await sleep(100);
-  console.log(`Version: ${chalk.magentaBright(version)}`);
+  const headerText =
+`   ███╗   ███╗ █████╗ ██████╗ ███████╗██╗     ██╗ ██████╗███████╗██████╗         ██████╗██╗     ██╗
+   ████╗ ████║██╔══██╗██╔══██╗██╔════╝██║     ██║██╔════╝██╔════╝██╔══██╗       ██╔════╝██║     ██║
+   ██╔████╔██║███████║██████╔╝███████╗██║     ██║██║     █████╗  ██████╔╝ ████╗ ██║     ██║     ██║
+   ██║╚██╔╝██║██╔══██║██╔═══╝ ╚════██║██║     ██║██║     ██╔══╝  ██╔══██╗ ╚═══╝ ██║     ██║     ██║
+   ██║ ╚═╝ ██║██║  ██║██║     ███████║███████╗██║╚██████╗███████╗██║  ██║       ╚██████╗███████╗██║
+   ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚══════╝╚══════╝╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝        ╚═════╝╚══════╝╚═╝`;
+  console.log(gradient.pastel.multiline(headerText));
+  console.log(`Version: ${chalk.magentaBright(version)}\n`);
 }
 // Enter to continue
 /*
@@ -84,6 +85,19 @@ async function backToMenu() {
     ]
   });
 }
+// Back to help menu
+/*
+*/
+async function backToHelp() {
+  const answer = await inquirer.prompt({
+    name: 'backAction',
+    type: 'list',
+    message: 'Press enter to go back to the help menu',
+    choices: [
+      'Back'
+    ]
+  });
+}
 // Generate file ID
 /*
 Used to generate the prefix for the file ID when slicing
@@ -106,17 +120,24 @@ function entityCompare(a, b) {
   }
   return 0;
 }
+// Test function
 async function test() {
-  shortcuts.query(`./MapSlicer-CLI.lnk`, console.log);
-  console.log(path.resolve("./"));
-
-  console.log({
-    "userHomeDir": userHomeDir,
-    "CONF_TIMBERBORN_DIR": configJSON.CONF_TIMBERBORN_DIR,
-    "timberbornPath": timberbornPath,
-    "CONF_TIMBERBORN_MAP_DIR": configJSON.CONF_TIMBERBORN_MAP_DIR,
-    "timberbornMapPath": timberbornMapPath
-  })
+  console.log(`
+  Full Colours:
+    ${chalk.bgBlack("bgBlack")} \t \t ${chalk.black("black")} \t \t ${chalk.bgBlackBright("bgBlackBright")} \t \t ${chalk.blackBright("blackBright")}
+    ${chalk.bgBlue("bgBlue")} \t \t ${chalk.blue("blue")} \t \t ${chalk.bgBlueBright("bgBlueBright")} \t \t ${chalk.blueBright("blueBright")}
+    ${chalk.bgCyan("bgCyan")} \t \t ${chalk.cyan("cyan")} \t \t ${chalk.bgCyanBright("bgCyanBright")} \t \t ${chalk.cyanBright("cyanBright")}
+    ${chalk.bgGreen("bgGreen")} \t \t ${chalk.green("green")} \t \t ${chalk.bgGreenBright("bgGreenBright")} \t \t ${chalk.greenBright("greenBright")}
+    ${chalk.bgMagenta("bgMagenta")} \t \t ${chalk.magenta("magenta")} \t ${chalk.bgMagentaBright("bgMagentaBright")} \t ${chalk.magentaBright("magentaBright")}
+    ${chalk.bgRed("bgRed")} \t \t ${chalk.red("red")} \t \t ${chalk.bgRedBright("bgRedBright")} \t \t ${chalk.redBright("redBright")}
+    ${chalk.bgWhite("bgWhite")} \t \t ${chalk.white("white")} \t \t ${chalk.bgWhiteBright("bgWhiteBright")} \t \t ${chalk.whiteBright("whiteBright")}
+    ${chalk.bgYellow("bgYellow")} \t \t ${chalk.yellow("yellow")} \t ${chalk.bgYellowBright("bgYellowBright")} \t ${chalk.yellowBright("yellowBright")}
+  Limited Colours:
+    ${chalk.bgGray("bgGray")} \t \t ${chalk.gray("gray")}
+    ${chalk.bgGrey("bgGrey")} \t \t ${chalk.grey("grey")}
+  Gradient:
+    ${gradient.pastel("██████████████████████████████████████████████████████████████████████████████████████████████")}
+  `);
 }
 
 // ============= WELCOME & CONFIG ================================================================
@@ -249,8 +270,10 @@ Takes in an JSON strigigied object and returns a JSON strigified object.
 */
 function validateConfig(inputConfig) {
   let configJSON = JSON.parse(inputConfig);
-  configJSON.CONF_TIMBERBORN_DIR = configJSON.CONF_TIMBERBORN_DIR.replace(/^/,"/").replace(/$/,"/").replace(/\/\//,"/");
-  configJSON.CONF_TIMBERBORN_MAP_DIR = configJSON.CONF_TIMBERBORN_MAP_DIR.replace(/$/,"/").replace(/\/\//,"/");
+  // Add slashes to front and end, and replace all slashes with single forward slash
+  configJSON.CONF_TIMBERBORN_DIR = configJSON.CONF_TIMBERBORN_DIR.replace(/(^|$)/g, "/").replace(/(\\|\/)+/g,"/")
+  // Remove all slashes from 'Maps' input and add a slash at the end
+  configJSON.CONF_TIMBERBORN_MAP_DIR = `${configJSON.CONF_TIMBERBORN_MAP_DIR.replace(/(\\|\/)+/g, "")}/`
   return JSON.stringify(configJSON);
 }
 // View config
@@ -258,7 +281,15 @@ function validateConfig(inputConfig) {
 Used to view the config details and then ask if the user to change the config
 */
 async function viewConfig() {
-
+  console.log(`${chalk.bgBlackBright(' Current Configuration Settings:                                                              ')}`);
+  console.log(configJSON);
+  let configSelected = await inquirer.prompt({
+    name: 'selected',
+    type: 'list',
+    message: chalk.magentaBright('Please select the configuration parameter you wish to change\n'),
+    choices: [...Object.keys(configJSON), new inquirer.Separator(), ...["Back to Main Menu"]]
+  });
+  console.log(configSelected);
 }
 
 
@@ -278,7 +309,7 @@ async function commandAskOperation() {
       'Un-Slice',
       'Help',
       'Config',
-      // 'Test',
+      'Test',
       'Quit'
     ]
   });
@@ -654,24 +685,67 @@ async function helpShowPage1() {
     Created for ${chalk.green('@SnippyHippie92')} (Thanks for the chalenge, this was a lot of fun!)
     Author: ${chalk.green('@battery_smooth')}
 
+  `);
+  const helpPage = await inquirer.prompt({
+    name: 'helpPageSelected',
+    type: 'list',
+    message: 'To see more, please select a command from the list below',
+    choices: [
+      'Slice Command',
+      'Un-slice Command',
+      'Help Command',
+      'Config Command',
+      new inquirer.Separator(),
+      'Back to Main Menu'
+    ]
+  });
+  return helpPage.helpPageSelected;
+}
+// Show slice help page
+/*
+*/
+async function helpSlice() {
+  console.log(`
     ${chalk.bgBlueBright(' Slice Command                                                                                ')}
     ${chalk.blueBright('Purpose:')}
     The slice command will take a copy of your world save and slice all entities off the top
     relative to the height input after running the command.
+
     ${chalk.blueBright('Use:')}
     After running the command, you will be asked to provide a height to slice the map from.
     Please note, any entities which are located ${chalk.red('at or above')} the height specified
     will be removed.
-
-    ${chalk.bgMagentaBright(' Unslice Command                                                                              ')}
+  `);
+}
+// Show un-slice help page
+/*
+*/
+async function helpUnslice() {
+  console.log(`
+    ${chalk.bgMagentaBright(' Un-slice Command                                                                             ')}
     ${chalk.magentaBright('Purpose:')}
     The un-slice command will stitch back together a map and its removed entities.
     It will then run validation while it makes the required checks to the save file.
+
     ${chalk.magentaBright('Use:')}
     After selecting the command, it will ask you to select which slice to re-import.
-
+  `);
+}
+// Show help help page
+/*
+*/
+async function helpHelp() {
+  console.log(`
     ${chalk.bgRedBright(' Help Command                                                                                 ')}
     That's... how you got here...
+  `);
+}
+// Show config help page
+/*
+*/
+async function helpConfig() {
+  console.log(`
+    ${chalk.bgRedBright(' Config Command                                                                               ')}
   `);
 }
 
@@ -767,8 +841,7 @@ async function mainMenu() {
       break;
 
     case "Help":
-      await helpShowPage1();
-      await backToMenu();
+      await helpMenu();
       break;
     
     case "Config":
@@ -788,6 +861,42 @@ async function mainMenu() {
   mainMenu();
 }
 
+async function helpMenu() {
+  // Default menu headers
+  await printHeader();
+  // Menu page selection handler
+  const helpPage = await helpShowPage1();
+  // break out if the help page is the main menu
+  if(helpPage === "Back to Main Menu") { return 0 }
+  switch (helpPage) {
+    case "Slice Command":
+      await printHeader();
+      await helpSlice();
+      await backToHelp();
+      break;
+
+    case "Un-slice Command":
+      await printHeader();
+      await helpUnslice();
+      await backToHelp();
+      break;
+
+    case "Help Command":
+      await printHeader();
+      await helpHelp();
+      await backToHelp();
+      break;
+
+    case "Config Command":
+      await printHeader();
+      await helpConfig();
+      await backToHelp();
+      break;
+  }
+  // Calls the help page again - this probably shouldn't be an await, but the initial call is
+  // resolved if called sync, so needs to be await, even though it leaves a promise stack
+  await helpMenu();
+}
 
 // ============= WORKFLOW ========================================================================
 // Application
