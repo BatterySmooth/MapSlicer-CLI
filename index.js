@@ -23,6 +23,7 @@ import * as shortcuts from 'windows-shortcuts';
 // Globals
 const version = "1.2.7";
 const userHomeDir = homedir();
+let configJSON;
 let timberbornPath;
 let timberbornMapPath;
 
@@ -108,9 +109,17 @@ function entityCompare(a, b) {
 async function test() {
   shortcuts.query(`./MapSlicer-CLI.lnk`, console.log);
   console.log(path.resolve("./"));
+
+  console.log({
+    "userHomeDir": userHomeDir,
+    "CONF_TIMBERBORN_DIR": configJSON.CONF_TIMBERBORN_DIR,
+    "timberbornPath": timberbornPath,
+    "CONF_TIMBERBORN_MAP_DIR": configJSON.CONF_TIMBERBORN_MAP_DIR,
+    "timberbornMapPath": timberbornMapPath
+  })
 }
 
-// ============= WELCOME =========================================================================
+// ============= WELCOME & CONFIG ================================================================
 // Splash screen
 /*
 Splash screen for the application. It will also validate the environment
@@ -141,7 +150,7 @@ async function validateEnvironment() {
       }
       return data;
     });
-    let configJSON = JSON.parse(configData);
+    configJSON = JSON.parse(configData);
     timberbornPath = userHomeDir + configJSON.CONF_TIMBERBORN_DIR;
     timberbornMapPath = timberbornPath + configJSON.CONF_TIMBERBORN_MAP_DIR;
     spinnerConfig.success({ text: `Configuration data loaded` });
@@ -205,8 +214,7 @@ async function setupConfig() {
     default: '/Documents/Timberborn/'
   });
   let timberbornDirectory = answerDirectory.timberbornDirectory;
-  // if (timberbornDirectory.substr(0) != '/') { timberbornDirectory = '/' + timberbornDirectory }
-  // if (timberbornDirectory.substr(-1) != '/') { timberbornDirectory = timberbornDirectory + '/' }
+
   let answerMapDirectory = await inquirer.prompt({
     name: 'timberbornMapDirectory',
     type: 'input',
@@ -214,15 +222,16 @@ async function setupConfig() {
     default: 'Maps/'
   });
   let timberbornMapDirectory = answerMapDirectory.timberbornMapDirectory;
-  // if (timberbornMapDirectory.substr(-1) != '/') { timberbornMapDirectory = '/' + timberbornMapDirectory }
 
-  const configOutput = {
+  let configOutput = {
     "CONF_TIMBERBORN_DIR": timberbornDirectory,
     "CONF_TIMBERBORN_MAP_DIR": timberbornMapDirectory
   }
+  // Validate config paths
+  let validatedConfig = validateConfig(JSON.stringify(configOutput));
   // Write config file
   try {
-    fs.writeFile(`./config.json`, JSON.stringify(configOutput), 'utf8', (err) => {
+    fs.writeFile(`./config.json`, validatedConfig, 'utf8', (err) => {
       if (err) {
         console.log(err);
       }
@@ -232,6 +241,26 @@ async function setupConfig() {
   }
   await sleep(100);
 }
+// Configuration validation
+/*
+Used to validate the paths for the config input. This will add the leading and trailing slashes
+if needed.
+Takes in an JSON strigigied object and returns a JSON strigified object.
+*/
+function validateConfig(inputConfig) {
+  let configJSON = JSON.parse(inputConfig);
+  configJSON.CONF_TIMBERBORN_DIR = configJSON.CONF_TIMBERBORN_DIR.replace(/^/,"/").replace(/$/,"/").replace(/\/\//,"/");
+  configJSON.CONF_TIMBERBORN_MAP_DIR = configJSON.CONF_TIMBERBORN_MAP_DIR.replace(/$/,"/").replace(/\/\//,"/");
+  return JSON.stringify(configJSON);
+}
+// View config
+/*
+Used to view the config details and then ask if the user to change the config
+*/
+async function viewConfig() {
+  
+}
+
 
 // ============= COMMANDS ========================================================================
 // Main operation input
@@ -248,6 +277,7 @@ async function commandAskOperation() {
       'Slice',
       'Un-Slice',
       'Help',
+      'Config',
       // 'Test',
       'Quit'
     ]
@@ -738,6 +768,11 @@ async function mainMenu() {
 
     case "Help":
       await helpShowPage1();
+      await backToMenu();
+      break;
+    
+    case "Config":
+      await viewConfig();
       await backToMenu();
       break;
 
