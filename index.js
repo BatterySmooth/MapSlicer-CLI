@@ -19,7 +19,7 @@ import AdmZip from 'adm-zip';
 import * as shortcuts from 'windows-shortcuts';
 
 // Globals
-const version = "1.2.12";
+const version = "1.2.13";
 const userHomeDir = homedir();
 let configJSON;
 let timberbornPath;
