@@ -9,7 +9,6 @@ import * as fs from 'fs';
 // import fsPromises from 'fs/promises'
 import * as path from 'path';
 
-// Node packages
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import gradient from 'gradient-string';
@@ -18,86 +17,91 @@ import { createSpinner } from 'nanospinner';
 import AdmZip from 'adm-zip';
 import * as shortcuts from 'windows-shortcuts';
 
+// Local imports
+import ui from './src/functions/ui.js';
+import funcs from './src/functions/general.js';
+import test from './src/pages/test.js';
+
 // Globals
-const version = "1.2.13";
+// const version = "1.2.13";
 const userHomeDir = homedir();
 let configJSON;
 let timberbornPath;
 let timberbornMapPath;
 
 // ============= FUNCTIONS =======================================================================
-// Sleep function
-const sleep = (ms) => new Promise ((r) => setTimeout(r, ms));
-// Print header
-/*
-  Function to show the welcome/home screen
-*/
-async function printHeader() {
-  console.clear();
-  const headerText =
-`   ███╗   ███╗ █████╗ ██████╗ ███████╗██╗     ██╗ ██████╗███████╗██████╗         ██████╗██╗     ██╗
-   ████╗ ████║██╔══██╗██╔══██╗██╔════╝██║     ██║██╔════╝██╔════╝██╔══██╗       ██╔════╝██║     ██║
-   ██╔████╔██║███████║██████╔╝███████╗██║     ██║██║     █████╗  ██████╔╝ ████╗ ██║     ██║     ██║
-   ██║╚██╔╝██║██╔══██║██╔═══╝ ╚════██║██║     ██║██║     ██╔══╝  ██╔══██╗ ╚═══╝ ██║     ██║     ██║
-   ██║ ╚═╝ ██║██║  ██║██║     ███████║███████╗██║╚██████╗███████╗██║  ██║       ╚██████╗███████╗██║
-   ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚══════╝╚══════╝╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝        ╚═════╝╚══════╝╚═╝`;
-  console.log(gradient.pastel.multiline(headerText));
-  console.log(`Version: ${chalk.magentaBright(version)}\n`);
-}
-// Enter to continue
-/*
-*/
-async function enterToContinue() {
-  const answer = await inquirer.prompt({
-    name: 'continueAction',
-    type: 'list',
-    message: 'Press enter to continue',
-    choices: [
-      'Continue'
-    ]
-  });
-}
-// Continue or Cancel
-/*
-*/
-async function continueOrCancel(detail) {
-  const answer = await inquirer.prompt({
-    name: 'answer',
-    type: 'list',
-    message: `${detail} Do you wish to continue?`,
-    choices: [
-      'Cancel',
-      'Continue'
-    ]
-  });
-  return answer
-}
-// Back to main menu
-/*
-*/
-async function backToMenu() {
-  const answer = await inquirer.prompt({
-    name: 'backAction',
-    type: 'list',
-    message: 'Press enter to go back to the main menu',
-    choices: [
-      'Back'
-    ]
-  });
-}
-// Back to help menu
-/*
-*/
-async function backToHelp() {
-  const answer = await inquirer.prompt({
-    name: 'backAction',
-    type: 'list',
-    message: 'Press enter to go back to the help menu',
-    choices: [
-      'Back'
-    ]
-  });
-}
+// // Sleep function
+// const sleep = (ms) => new Promise ((r) => setTimeout(r, ms));
+// // Print header
+// /*
+//   Function to show the welcome/home screen
+// */
+// async function printHeader() {
+//   console.clear();
+//   const headerText =
+// `   ███╗   ███╗ █████╗ ██████╗ ███████╗██╗     ██╗ ██████╗███████╗██████╗         ██████╗██╗     ██╗
+//    ████╗ ████║██╔══██╗██╔══██╗██╔════╝██║     ██║██╔════╝██╔════╝██╔══██╗       ██╔════╝██║     ██║
+//    ██╔████╔██║███████║██████╔╝███████╗██║     ██║██║     █████╗  ██████╔╝ ████╗ ██║     ██║     ██║
+//    ██║╚██╔╝██║██╔══██║██╔═══╝ ╚════██║██║     ██║██║     ██╔══╝  ██╔══██╗ ╚═══╝ ██║     ██║     ██║
+//    ██║ ╚═╝ ██║██║  ██║██║     ███████║███████╗██║╚██████╗███████╗██║  ██║       ╚██████╗███████╗██║
+//    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚══════╝╚══════╝╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝        ╚═════╝╚══════╝╚═╝`;
+//   console.log(gradient.pastel.multiline(headerText));
+//   console.log(`Version: ${chalk.magentaBright(version)}\n`);
+// }
+// // Enter to continue
+// /*
+// */
+// async function enterToContinue() {
+//   const answer = await inquirer.prompt({
+//     name: 'continueAction',
+//     type: 'list',
+//     message: 'Press enter to continue',
+//     choices: [
+//       'Continue'
+//     ]
+//   });
+// }
+// // Continue or Cancel
+// /*
+// */
+// async function continueOrCancel(detail) {
+//   const answer = await inquirer.prompt({
+//     name: 'answer',
+//     type: 'list',
+//     message: `${detail} Do you wish to continue?`,
+//     choices: [
+//       'Cancel',
+//       'Continue'
+//     ]
+//   });
+//   return answer
+// }
+// // Back to main menu
+// /*
+// */
+// async function backToMenu() {
+//   const answer = await inquirer.prompt({
+//     name: 'backAction',
+//     type: 'list',
+//     message: 'Press enter to go back to the main menu',
+//     choices: [
+//       'Back'
+//     ]
+//   });
+// }
+// // Back to help menu
+// /*
+// */
+// async function backToHelp() {
+//   const answer = await inquirer.prompt({
+//     name: 'backAction',
+//     type: 'list',
+//     message: 'Press enter to go back to the help menu',
+//     choices: [
+//       'Back'
+//     ]
+//   });
+// }
 // Generate file ID
 /*
 Used to generate the prefix for the file ID when slicing
@@ -107,6 +111,17 @@ function generateFileID() {
   date = date.replaceAll("T", " ").replaceAll(":", "-").replace(/\.[^/.]+$/, "");
   return date;
 }
+// // Generate file name
+// function generateFileName(fileName, fileExtension, prefix) {
+//   let date = new Date().toISOString();
+//   date = date                                                       // Create new formatted date:
+//     .replaceAll("T", " ")                                           // Remove 'T' from ISO string
+//     .replaceAll(":", "-")                                           // Replace ':' with '-'
+//     .replace(/\.[^/.]+$/, "");                                      // Remove milliseconds and 'Z'
+//   return prefix + date + " " + fileName                             // Format the new prefix & DateTime
+//     .replace(/^(U_|S_)*(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )*/, "")  // Remove date-time prefixes
+//     .replace(/\.[^\/.]+$/, fileExtension);                          // Replace file extension
+// }
 // Entity sorting filter
 /*
 Function used when filtering entities by Z axis after un-slice
@@ -120,25 +135,27 @@ function entityCompare(a, b) {
   }
   return 0;
 }
-// Test function
-async function test() {
-  console.log(`
-  Full Colours:
-    ${chalk.bgBlack("bgBlack")} \t \t ${chalk.black("black")} \t \t ${chalk.bgBlackBright("bgBlackBright")} \t \t ${chalk.blackBright("blackBright")}
-    ${chalk.bgBlue("bgBlue")} \t \t ${chalk.blue("blue")} \t \t ${chalk.bgBlueBright("bgBlueBright")} \t \t ${chalk.blueBright("blueBright")}
-    ${chalk.bgCyan("bgCyan")} \t \t ${chalk.cyan("cyan")} \t \t ${chalk.bgCyanBright("bgCyanBright")} \t \t ${chalk.cyanBright("cyanBright")}
-    ${chalk.bgGreen("bgGreen")} \t \t ${chalk.green("green")} \t \t ${chalk.bgGreenBright("bgGreenBright")} \t \t ${chalk.greenBright("greenBright")}
-    ${chalk.bgMagenta("bgMagenta")} \t \t ${chalk.magenta("magenta")} \t ${chalk.bgMagentaBright("bgMagentaBright")} \t ${chalk.magentaBright("magentaBright")}
-    ${chalk.bgRed("bgRed")} \t \t ${chalk.red("red")} \t \t ${chalk.bgRedBright("bgRedBright")} \t \t ${chalk.redBright("redBright")}
-    ${chalk.bgWhite("bgWhite")} \t \t ${chalk.white("white")} \t \t ${chalk.bgWhiteBright("bgWhiteBright")} \t \t ${chalk.whiteBright("whiteBright")}
-    ${chalk.bgYellow("bgYellow")} \t \t ${chalk.yellow("yellow")} \t ${chalk.bgYellowBright("bgYellowBright")} \t ${chalk.yellowBright("yellowBright")}
-  Limited Colours:
-    ${chalk.bgGray("bgGray")} \t \t ${chalk.gray("gray")}
-    ${chalk.bgGrey("bgGrey")} \t \t ${chalk.grey("grey")}
-  Gradient:
-    ${gradient.pastel("██████████████████████████████████████████████████████████████████████████████████████████████")}
-  `);
-}
+// // Test function
+// async function test() {
+//   console.log(`
+//   Full Colours:
+//     ${chalk.bgBlack("bgBlack")} \t \t ${chalk.black("black")} \t \t ${chalk.bgBlackBright("bgBlackBright")} \t \t ${chalk.blackBright("blackBright")}
+//     ${chalk.bgBlue("bgBlue")} \t \t ${chalk.blue("blue")} \t \t ${chalk.bgBlueBright("bgBlueBright")} \t \t ${chalk.blueBright("blueBright")}
+//     ${chalk.bgCyan("bgCyan")} \t \t ${chalk.cyan("cyan")} \t \t ${chalk.bgCyanBright("bgCyanBright")} \t \t ${chalk.cyanBright("cyanBright")}
+//     ${chalk.bgGreen("bgGreen")} \t \t ${chalk.green("green")} \t \t ${chalk.bgGreenBright("bgGreenBright")} \t \t ${chalk.greenBright("greenBright")}
+//     ${chalk.bgMagenta("bgMagenta")} \t \t ${chalk.magenta("magenta")} \t ${chalk.bgMagentaBright("bgMagentaBright")} \t ${chalk.magentaBright("magentaBright")}
+//     ${chalk.bgRed("bgRed")} \t \t ${chalk.red("red")} \t \t ${chalk.bgRedBright("bgRedBright")} \t \t ${chalk.redBright("redBright")}
+//     ${chalk.bgWhite("bgWhite")} \t \t ${chalk.white("white")} \t \t ${chalk.bgWhiteBright("bgWhiteBright")} \t \t ${chalk.whiteBright("whiteBright")}
+//     ${chalk.bgYellow("bgYellow")} \t \t ${chalk.yellow("yellow")} \t ${chalk.bgYellowBright("bgYellowBright")} \t ${chalk.yellowBright("yellowBright")}
+//   Limited Colours:
+//     ${chalk.bgGray("bgGray")} \t \t ${chalk.gray("gray")}
+//     ${chalk.bgGrey("bgGrey")} \t \t ${chalk.grey("grey")}
+//   Gradient:
+//     ${gradient.pastel("██████████████████████████████████████████████████████████████████████████████████████████████")}
+//   `);
+
+//   console.log(fsFunc.generateFileName("2023-04-17 10-22-23 2023-04-17 10-22-23 cavern.timber", ".json", "U_"));
+// }
 
 // ============= WELCOME & CONFIG ================================================================
 // Splash screen
@@ -180,7 +197,7 @@ async function validateEnvironment() {
     spinnerConfig.error({ text: `Config issue` });
     console.log(`${chalk.bgRed('ERROR:')}`);
     console.log(e);
-    await enterToContinue();
+    await ui.enterToContinue();
     console.clear();
     process.exit(0);
   }
@@ -196,7 +213,7 @@ async function validateEnvironment() {
     spinnerValidate.error({ text: `Validation failed` });
     console.log(`${chalk.bgRed('ERROR:')}`);
     console.log(err);
-    await enterToContinue();
+    await ui.enterToContinue();
     console.clear();
     process.exit(0);
   }
@@ -260,7 +277,7 @@ async function setupConfig() {
   } catch (e) {
     console.log(e);
   }
-  await sleep(100);
+  await funcs.sleep(100);
 }
 // Configuration validation
 /*
@@ -352,7 +369,7 @@ async function sliceSelectMap() {
     }
     });
   });
-  await sleep(500);
+  await funcs.sleep(500);
   spinner.success({ text: `Maps found` });
 
   const answer = await inquirer.prompt({
@@ -407,7 +424,7 @@ Extract the entities array from the world JSON
 async function sliceExtractEntities() {
   const spinnerExtractEntities = createSpinner('Extracting entities...').start();
   worldEntities = sliceWorldJSON.Entities;
-  await sleep(100);
+  await funcs.sleep(100);
   spinnerExtractEntities.success({ text: `Entities extracted` });
 }
 // Filter entities
@@ -495,7 +512,7 @@ Advise the user that the slice is complete!
 */
 async function sliceCompleted() {
   const rainbowTitle = chalkAnimation.rainbow("Slicing complete!");
-  await sleep(1000);
+  await funcs.sleep(1000);
   rainbowTitle.stop();
 }
 // Clear entity store
@@ -537,7 +554,7 @@ async function unsliceSelectMap() {
     }
     });
   });
-  await sleep(500);
+  await funcs.sleep(500);
   spinner.success({ text: `Maps found` });
 
   const answer = await inquirer.prompt({
@@ -586,15 +603,15 @@ async function unsliceExtractWorld() {
     });
     if (!unsliceWorldJSON) {
       spinnerWorldExtract.error({ text: `World data extraction failed\nWorld JSON file is empty` });
-      await sleep(100);
+      await funcs.sleep(100);
       return false;
     }
     spinnerWorldExtract.success({ text: `World data extracted` });
-    await sleep(100);
+    await funcs.sleep(100);
     return true;
   } catch (e) {
     spinnerWorldExtract.error({ text: `World data extraction failed\n${e}` });
-    await sleep(100);
+    await funcs.sleep(100);
     return false;
   }
 }
@@ -665,7 +682,7 @@ Advise the user that the un-slice is complete!
 */
 async function unsliceCompleted() {
   const rainbowTitle = chalkAnimation.rainbow("Un-slicing complete!");
-  await sleep(1000);
+  await funcs.sleep(1000);
   rainbowTitle.stop();
 }
 
@@ -759,7 +776,7 @@ async function helpConfig() {
 
 async function mainMenu() {
   // Default menu headers
-  await printHeader();
+  ui.printHeader();
   const op = await commandAskOperation();
   // Command input handler
   switch(op) {
@@ -772,39 +789,39 @@ async function mainMenu() {
       await sliceExtractEntities();
       const filterCount = await sliceFilterEntities();
       // Confirm slice
-      const userInput = await continueOrCancel(`${filterCount} entities will be affected.`);
+      const userInput = await ui.continueOrCancel(`${filterCount} entities will be affected.`);
       if (userInput.answer !== "Continue") {
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Store entities
       const storeOK = await sliceCreateStoreFile();
       // Cancel if error
       if (!storeOK) {
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Slice world file
       const sliceOK = await slicePerformSlice();
       // Cancel if error
       if (!sliceOK) {
-        await enterToContinue();
+        await ui.enterToContinue();
         await sliceClearEntityStore();
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Write sliced world file
       const writeOK = await sliceSaveWorld();
       // Cancel if error
       if (!writeOK) {
-        await enterToContinue();
+        await ui.enterToContinue();
         await sliceClearEntityStore();
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Slice complete!
       await sliceCompleted();
-      await enterToContinue();
+      await ui.enterToContinue();
       break;
 
     case "Un-Slice":
@@ -813,36 +830,36 @@ async function mainMenu() {
       const storeFound = await unsliceValidateStore();
       // Check that store has been found
       if (!storeFound) {
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Perform the unslice
       const extractOK = await unsliceExtractWorld();
       if (!extractOK) {
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Extract entity store
       const UstoreOK = await unsliceStoreExtract();
       if (!UstoreOK) {
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Perform the unslice
       const unsliceOK = await unslicePerformUnslice();
       if (!unsliceOK) {
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Save the new world file
       const unsliceSaved = await unsliceSaveWorld();
       if (!unsliceSaved) {
-        await backToMenu();
+        await ui.backToMenu();
         break;
       }
       // Un-slice complete!
       await unsliceCompleted();
-      await enterToContinue();
+      await ui.enterToContinue();
       break;
 
     case "Help":
@@ -851,12 +868,12 @@ async function mainMenu() {
     
     case "Config":
       await viewConfig();
-      await backToMenu();
+      await ui.backToMenu();
       break;
 
     case "Test":
-      await test();
-      await backToMenu();
+      await test.display();
+      await ui.backToMenu();
       break;
     
     case "Quit":
@@ -868,34 +885,34 @@ async function mainMenu() {
 
 async function helpMenu() {
   // Default menu headers
-  await printHeader();
+  ui.printHeader();
   // Menu page selection handler
   const helpPage = await helpShowPage1();
   // break out if the help page is the main menu
   if(helpPage === "Back to Main Menu") { return 0 }
   switch (helpPage) {
     case "Slice Command":
-      await printHeader();
+      ui.printHeader();
       await helpSlice();
-      await backToHelp();
+      await ui.backToHelp();
       break;
 
     case "Un-slice Command":
-      await printHeader();
+      ui.printHeader();
       await helpUnslice();
-      await backToHelp();
+      await ui.backToHelp();
       break;
 
     case "Help Command":
-      await printHeader();
+      ui.printHeader();
       await helpHelp();
-      await backToHelp();
+      await ui.backToHelp();
       break;
 
     case "Config Command":
-      await printHeader();
+      ui.printHeader();
       await helpConfig();
-      await backToHelp();
+      await ui.backToHelp();
       break;
   }
   // Calls the help page again - this probably shouldn't be an await, but the initial call is
@@ -907,5 +924,4 @@ async function helpMenu() {
 // Application
 console.clear();
 await splashScreen();
-await printHeader();
 await mainMenu();
