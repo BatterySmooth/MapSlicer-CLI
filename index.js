@@ -18,17 +18,17 @@ import AdmZip from 'adm-zip';
 import * as shortcuts from 'windows-shortcuts';
 
 // Local imports
-import ui from './src/functions/ui.js';
-import funcs from './src/functions/general.js';
 import globals from './src/variables/globals.js';
 import config from './src/config/config.js';
+import funcs from './src/functions/general.js';
+import ui from './src/functions/ui.js';
 import test from './src/pages/test.js';
 
 // Globals
 const userHomeDir = homedir();
-let configJSON;
-let timberbornPath;
-let timberbornMapPath;
+// let configJSON;
+// let timberbornPath;
+// let timberbornMapPath;
 
 // ============= FUNCTIONS =======================================================================
 // // Sleep function
@@ -173,34 +173,14 @@ async function splashScreen() {
 Validates the environment and performs checks prior to starting
 */
 async function validateEnvironment() {
-  // Check config
-  const spinnerConfig = createSpinner('Pulling Config...').start();
   try {
     if(!config.exists()) {
-      spinnerConfig.stop();
-      console.log(`${chalk.bgRed('Config Missing - Set-up Required')}`);
-      await setupConfig();
-      spinnerConfig.start();
+      await config.setup();
     }
-    const configData = fs.readFileSync("./config.json", {encoding: 'utf8'}, (err, data) => {
-      if (err) {
-        spinnerConfig.error({ text: `Configuration file reading failed\n${e}` });
-        return false;
-      }
-      return data;
-    });
-    configJSON = JSON.parse(configData);
-    timberbornPath = userHomeDir + configJSON.CONF_TIMBERBORN_DIR;
-    timberbornMapPath = timberbornPath + configJSON.CONF_TIMBERBORN_MAP_DIR;
-    spinnerConfig.success({ text: `Configuration data loaded` });
+    globals.config = config.read();
 
   } catch (e) {
-    spinnerConfig.error({ text: `Config issue` });
-    console.log(`${chalk.bgRed('ERROR:')}`);
-    console.log(e);
-    await ui.enterToContinue();
-    console.clear();
-    process.exit(0);
+    await funcs.error(e);
   }
   // Check required paths are valid
   const spinnerValidate = createSpinner('Validating environemnt...').start();
@@ -240,60 +220,60 @@ async function validateEnvironment() {
     });
   }
 }
-// Configuration Setup
-/*
-Used to set up the config if the file is missing
-*/
-async function setupConfig() {
-  // Take config inputs and format start and end slashes
-  let answerDirectory = await inquirer.prompt({
-    name: 'timberbornDirectory',
-    type: 'input',
-    message: `Please enter the path for the Timberborn save folder relative to your home directory\n(This is usually stored in your documents folder)\n`,
-    default: '/Documents/Timberborn/'
-  });
-  let timberbornDirectory = answerDirectory.timberbornDirectory;
+// // Configuration Setup
+// /*
+// Used to set up the config if the file is missing
+// */
+// async function setupConfig() {
+//   // Take config inputs and format start and end slashes
+//   let answerDirectory = await inquirer.prompt({
+//     name: 'timberbornDirectory',
+//     type: 'input',
+//     message: `Please enter the path for the Timberborn save folder relative to your home directory\n(This is usually stored in your documents folder)\n`,
+//     default: '/Documents/Timberborn/'
+//   });
+//   let timberbornDirectory = answerDirectory.timberbornDirectory;
 
-  let answerMapDirectory = await inquirer.prompt({
-    name: 'timberbornMapDirectory',
-    type: 'input',
-    message: `Please enter the path for the Timberborn map folder relative to the Timberborn folder\n(This is almost always the default provided)\n`,
-    default: 'Maps/'
-  });
-  let timberbornMapDirectory = answerMapDirectory.timberbornMapDirectory;
+//   let answerMapDirectory = await inquirer.prompt({
+//     name: 'timberbornMapDirectory',
+//     type: 'input',
+//     message: `Please enter the path for the Timberborn map folder relative to the Timberborn folder\n(This is almost always the default provided)\n`,
+//     default: 'Maps/'
+//   });
+//   let timberbornMapDirectory = answerMapDirectory.timberbornMapDirectory;
 
-  let configOutput = {
-    "CONF_TIMBERBORN_DIR": timberbornDirectory,
-    "CONF_TIMBERBORN_MAP_DIR": timberbornMapDirectory
-  }
-  // Validate config paths
-  let validatedConfig = validateConfig(JSON.stringify(configOutput));
-  // Write config file
-  try {
-    fs.writeFile(`./config.json`, validatedConfig, 'utf8', (err) => {
-      if (err) {
-        console.log(err);
-      }
-    });
-  } catch (e) {
-    console.log(e);
-  }
-  await funcs.sleep(100);
-}
+//   let configOutput = {
+//     "CONF_TIMBERBORN_DIR": timberbornDirectory,
+//     "CONF_TIMBERBORN_MAP_DIR": timberbornMapDirectory
+//   }
+//   // Validate config paths
+//   let validatedConfig = validateConfig(JSON.stringify(configOutput));
+//   // Write config file
+//   try {
+//     fs.writeFile(`./config.json`, validatedConfig, 'utf8', (err) => {
+//       if (err) {
+//         console.log(err);
+//       }
+//     });
+//   } catch (e) {
+//     console.log(e);
+//   }
+//   await funcs.sleep(100);
+// }
 // Configuration validation
 /*
 Used to validate the paths for the config input. This will add the leading and trailing slashes
 if needed.
 Takes in an JSON strigigied object and returns a JSON strigified object.
 */
-function validateConfig(inputConfig) {
-  let configJSON = JSON.parse(inputConfig);
-  // Add slashes to front and end, and replace all slashes with single forward slash
-  configJSON.CONF_TIMBERBORN_DIR = configJSON.CONF_TIMBERBORN_DIR.replace(/(^|$)/g, "/").replace(/(\\|\/)+/g,"/")
-  // Remove all slashes from 'Maps' input and add a slash at the end
-  configJSON.CONF_TIMBERBORN_MAP_DIR = `${configJSON.CONF_TIMBERBORN_MAP_DIR.replace(/(\\|\/)+/g, "")}/`
-  return JSON.stringify(configJSON);
-}
+// function validateConfig(inputConfig) {
+//   let configJSON = JSON.parse(inputConfig);
+//   // Add slashes to front and end, and replace all slashes with single forward slash
+//   configJSON.CONF_TIMBERBORN_DIR = configJSON.CONF_TIMBERBORN_DIR.replace(/(^|$)/g, "/").replace(/(\\|\/)+/g,"/")
+//   // Remove all slashes from 'Maps' input and add a slash at the end
+//   configJSON.CONF_TIMBERBORN_MAP_DIR = `${configJSON.CONF_TIMBERBORN_MAP_DIR.replace(/(\\|\/)+/g, "")}/`
+//   return JSON.stringify(configJSON);
+// }
 // View config
 /*
 Used to view the config details and then ask if the user to change the config

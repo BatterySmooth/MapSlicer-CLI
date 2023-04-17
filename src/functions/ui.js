@@ -1,4 +1,3 @@
-export default { printHeader, enterToContinue, continueOrCancel, backToMenu, backToHelp }
 // Node imports
 import inquirer from 'inquirer';
 import gradient from 'gradient-string';
@@ -81,3 +80,5 @@ async function backToHelp() {
     ]
   });
 }
+
+export default { printHeader, enterToContinue, continueOrCancel, backToMenu, backToHelp }

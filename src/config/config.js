@@ -1,18 +1,8 @@
-export default {
-  exists,
-  read
-  // setup,
-  // validate,
-  // view,
-  // configJSON,
-  // timberbornPath,
-  // timberbornMapPath
-}
-
 // Node imports
 import * as fs from 'fs';
 import inquirer from 'inquirer';
 import { createSpinner } from 'nanospinner';
+import chalk from 'chalk';
 
 // Module Constants
 const configPath = './config.json';
@@ -27,7 +17,6 @@ function exists() {
 }
 
 /**
- *
  * Asynchronous.
  * Reads the config data and returns the JSON object.
  * Handles its own spinner.
@@ -101,6 +90,7 @@ async function write({key, value}, quiet = false) {
  * Legacy name: setupConfig
  */
 async function setup() {
+  console.log(`${chalk.bgRed('Config Missing - Set-up Required')}`);
   // Take config inputs and format start and end slashes
   let answerDirectory = await inquirer.prompt({
     name: 'timberbornDirectory',
@@ -123,7 +113,7 @@ async function setup() {
     "CONF_TIMBERBORN_MAP_DIR": timberbornMapDirectory
   }
   // Validate config paths
-  let validatedConfig = validateConfig(JSON.stringify(configOutput));
+  let validatedConfig = validate(JSON.stringify(configOutput));
   // Write config file
   try {
     fs.writeFile(`./config.json`, validatedConfig, 'utf8', (err) => {
@@ -135,7 +125,7 @@ async function setup() {
     console.log(e);
   }
   // ***** Why is this needed? *****
-  await funcs.sleep(100);
+  // await funcs.sleep(100);
 }
 // Configuration validation
 /**
@@ -230,4 +220,17 @@ class Config {
   
   
 
+}
+
+export default {
+  exists,
+  read,
+  write,
+  setup
+  // setup,
+  // validate,
+  // view,
+  // configJSON,
+  // timberbornPath,
+  // timberbornMapPath
 }

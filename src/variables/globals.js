@@ -1,5 +1,5 @@
+let config;
+
 export default {
   config
 }
-
-let config;
