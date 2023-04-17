@@ -12,6 +12,7 @@ export default {
 // Node imports
 import * as fs from 'fs';
 import inquirer from 'inquirer';
+import { createSpinner } from 'nanospinner';
 
 // Module Constants
 const configPath = './config.json';
@@ -26,25 +27,71 @@ function exists() {
 }
 
 /**
+ *
  * Asynchronous.
  * Reads the config data and returns the JSON object.
  * Handles its own spinner.
- * @returns
+ * @param {boolean} quiet - If true, will not generate a spinner
+ * @returns {object}
  */
-async function read() {
-  const spinner = createSpinner('Pulling Config...').start();
+async function read(quiet = false) {
+  if (!quiet) {const spinner = createSpinner(`Pulling config...`).start();}
   fs.readFileSync(configPath, {encoding: 'utf8'}, (err, data) => {
     if (err) {
-      spinner.error({ text: `Configuration file reading failed\n${err}` });
+      if (!quiet) {spinner.error({ text: `Configuration file reading failed\n${err}` });}
       // TO DO: Pass screen over to config set-up
       console.throw(err);
       return err;
     }
-    spinner.success({ text: `Configuration data loaded` });
+    if (!quiet) {spinner.success({ text: `Configuration data loaded` });}
     return JSON.parse(data);
   });
 }
 
+/**
+ * Writes the modified key value pair to the config file.
+ * Handles its own spinner.
+ * Returns true if succeeded, false if failed.
+ * @param {object} record 
+ * @param {boolean} quiet - If true, will not generate a spinner
+ * @returns {boolean}
+ */
+async function write({key, value}, quiet = false) {
+  try {
+    if (!quiet) {const spinner = createSpinner(`Writing config...`).start();}
+    let config = read(true);
+    let newValue;
+    switch (key) {
+      case 'CONF_TIMBERBORN_DIR':
+        newValue = value
+          // Add a '/' to the start and end of the path
+          .replace(/(^|$)/g, "/")
+          // Replace all groups of slashes to a single '/'
+          .replace(/(\\|\/)+/g,"/"); 
+        break;
+      
+      case 'CONF_TIMBERBORN_MAP_DIR':
+        newValue = value
+          // Replace all slashes with blank
+          .replace(/(\\|\/)+/g, "");
+          // Append slash to path
+          + "/"
+        break;
+
+      default:
+        newValue = value;
+        break;
+    }
+    await config;
+    config[key] = newValue;
+    fs.writeFileSync(configPath, JSON.stringify(config));
+    if (!quiet) {spinner.success({ text: `Configuration data saved` });}
+    return true;
+  } catch {
+    if (!quiet) {spinner.error({ text: `Configuration failed to save` });}
+    return false;
+  }
+}
 
 
 // Configuration Setup

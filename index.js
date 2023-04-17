@@ -20,6 +20,7 @@ import * as shortcuts from 'windows-shortcuts';
 // Local imports
 import ui from './src/functions/ui.js';
 import funcs from './src/functions/general.js';
+import globals from './src/variables/globals.js';
 import config from './src/config/config.js';
 import test from './src/pages/test.js';
 
