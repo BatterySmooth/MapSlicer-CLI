@@ -430,10 +430,10 @@ Creates the entity store file for unslicing later
 This one is a good template to follow for the other functions in here (for when refactoring)
 */
 async function sliceCreateStoreFile() {
-  fileID = generateFileID();
+  // fileID = generateFileID();
   const spinner = createSpinner(`Creating entity store file...`).start();
   try {
-    fs.writeFile(`./entityStore/${fileID} ${sliceSelectedMap.replace(/^U_/,"").replace(/^(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )/,"").replace(/\.[^/.]+$/, ".json")}`, JSON.stringify(worldEntitiesToExtract), 'utf8', (err) => {
+    fs.writeFile(`./entityStore/${funcs.generateFileName(sliceSelectedMap, ".json", globals.config.CONF_SLICED_PREFIX)}`, JSON.stringify(worldEntitiesToExtract), 'utf8', (err) => {
       if (err) {
         spinner.error({ text: `Failed to create entity store file\n${err}` });
         return false;
