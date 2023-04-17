@@ -26,16 +26,22 @@ function exists() {
 }
 
 /**
- * Synchronous.
+ * Asynchronous.
  * Reads the config data and returns the JSON object.
+ * Handles its own spinner.
  * @returns
  */
-function read() {
+async function read() {
+  const spinner = createSpinner('Pulling Config...').start();
   fs.readFileSync(configPath, {encoding: 'utf8'}, (err, data) => {
     if (err) {
+      spinner.error({ text: `Configuration file reading failed\n${err}` });
+      // TO DO: Pass screen over to config set-up
+      console.throw(err);
       return err;
     }
-    return data;
+    spinner.success({ text: `Configuration data loaded` });
+    return JSON.parse(data);
   });
 }
 

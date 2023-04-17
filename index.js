@@ -20,10 +20,10 @@ import * as shortcuts from 'windows-shortcuts';
 // Local imports
 import ui from './src/functions/ui.js';
 import funcs from './src/functions/general.js';
+import config from './src/config/config.js';
 import test from './src/pages/test.js';
 
 // Globals
-// const version = "1.2.13";
 const userHomeDir = homedir();
 let configJSON;
 let timberbornPath;
@@ -175,7 +175,7 @@ async function validateEnvironment() {
   // Check config
   const spinnerConfig = createSpinner('Pulling Config...').start();
   try {
-    if(!fs.existsSync('./config.json')) {
+    if(!config.exists()) {
       spinnerConfig.stop();
       console.log(`${chalk.bgRed('Config Missing - Set-up Required')}`);
       await setupConfig();
