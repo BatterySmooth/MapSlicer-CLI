@@ -3,10 +3,7 @@ import inquirer from 'inquirer';
 import gradient from 'gradient-string';
 import chalk from 'chalk';
 // Local imports
-import pjson from '../../package.json' assert { type: "json" };
-
-// Constants
-const version = pjson.version;
+import globals from '../variables/globals.js';
 
 // Print header
 /**
@@ -24,7 +21,7 @@ function printHeader() {
    ██║ ╚═╝ ██║██║  ██║██║     ███████║███████╗██║╚██████╗███████╗██║  ██║       ╚██████╗███████╗██║
    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚══════╝╚══════╝╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝        ╚═════╝╚══════╝╚═╝`;
   console.log(gradient.pastel.multiline(headerText));
-  console.log(`Version: ${chalk.magentaBright(version)}\n`);
+  console.log(`Version: ${chalk.magentaBright(globals.version)}\n`);
 }
 // Enter to continue
 /*

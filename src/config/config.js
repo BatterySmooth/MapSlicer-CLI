@@ -1,5 +1,6 @@
 // Node imports
 import * as fs from 'fs';
+import fsPromises from 'fs/promises';
 import inquirer from 'inquirer';
 import { createSpinner } from 'nanospinner';
 import chalk from 'chalk';
@@ -17,37 +18,37 @@ function exists() {
 }
 
 /**
- * Asynchronous.
  * Reads the config data and returns the JSON object.
  * Handles its own spinner.
+ * Asynchronous.
  * @param {boolean} quiet - If true, will not generate a spinner
  * @returns {object}
  */
 async function read(quiet = false) {
-  if (!quiet) {const spinner = createSpinner(`Pulling config...`).start();}
-  fs.readFileSync(configPath, {encoding: 'utf8'}, (err, data) => {
-    if (err) {
-      if (!quiet) {spinner.error({ text: `Configuration file reading failed\n${err}` });}
-      // TO DO: Pass screen over to config set-up
-      console.throw(err);
-      return err;
-    }
-    if (!quiet) {spinner.success({ text: `Configuration data loaded` });}
+  let spinner;
+  if (!quiet) {createSpinner(`Pulling config...`).start();}
+  try {
+    const data = await fsPromises.readFile(configPath, 'utf8');
     return JSON.parse(data);
-  });
+  } catch (e) {
+    if (!quiet) {spinner.error({ text: `Configuration file reading failed\n${err}` });}
+    funcs.error(e)
+  }
 }
 
 /**
  * Writes the modified key value pair to the config file.
  * Handles its own spinner.
  * Returns true if succeeded, false if failed.
+ * Asynchronous.
  * @param {object} record 
  * @param {boolean} quiet - If true, will not generate a spinner
  * @returns {boolean}
  */
 async function write({key, value}, quiet = false) {
   try {
-    if (!quiet) {const spinner = createSpinner(`Writing config...`).start();}
+    let spinner;
+    if (!quiet) {spinner = createSpinner(`Writing config...`).start();}
     let config = read(true);
     let newValue;
     switch (key) {

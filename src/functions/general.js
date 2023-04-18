@@ -32,15 +32,14 @@ function generateFileName(fileName, fileExtension, prefix) {
 }
 
 /**
- * 
- * @param {*} error 
- * @param {Spinner} spinner 
- * @param {string} spinnerMessage 
+ * Generic error handler.
+ * Prints an error message to the console and awaits an enter press
+ * before closing the application.
+ * @param {*} error
  */
-async function error(error, spinner, spinnerMessage) {
-  if (spinner) {spinnerConfig.error({ text: spinnerMessage });}
-  console.log(`${chalk.bgRed('ERROR:')}`);
-  console.log(e);
+async function error(error) {
+  console.log(`${chalk.bgRed(' ERROR: ')}`);
+  console.log(error);
   await ui.enterToContinue();
   console.clear();
   process.exit(0);

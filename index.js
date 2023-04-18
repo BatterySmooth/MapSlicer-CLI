@@ -22,6 +22,7 @@ import globals from './src/variables/globals.js';
 import config from './src/config/config.js';
 import funcs from './src/functions/general.js';
 import ui from './src/functions/ui.js';
+import splash from './src/pages/splash.js';
 import test from './src/pages/test.js';
 
 // Globals
@@ -160,66 +161,66 @@ function entityCompare(a, b) {
 
 // ============= WELCOME & CONFIG ================================================================
 // Splash screen
-/*
-Splash screen for the application. It will also validate the environment
-*/
-async function splashScreen() {
-  const rainbowTitle = chalkAnimation.rainbow("Launching MapSlicer-CLI");
-  await validateEnvironment();
-  rainbowTitle.stop();
-}
+// /*
+// Splash screen for the application. It will also validate the environment
+// */
+// async function splashScreen() {
+//   const rainbowTitle = chalkAnimation.rainbow("Launching MapSlicer-CLI");
+//   await validateEnvironment();
+//   rainbowTitle.stop();
+// }
 // Validation function
 /*
 Validates the environment and performs checks prior to starting
 */
-async function validateEnvironment() {
-  try {
-    if(!config.exists()) {
-      await config.setup();
-    }
-    globals.config = config.read();
+// async function validateEnvironment() {
+//   try {
+//     if(!config.exists()) {
+//       await config.setup();
+//     }
+//     globals.config = config.read();
 
-  } catch (e) {
-    await funcs.error(e);
-  }
-  // Check required paths are valid
-  const spinnerValidate = createSpinner('Validating environemnt...').start();
-  try {
-    if(!fs.existsSync(timberbornPath)) { throw `The Timberborn folder is not accessible. The application will now close.` }
-    if(!fs.existsSync('./entityStore')) { fs.mkdirSync('./entityStore'); }
-    if(!fs.existsSync('./MapSlicer-CLI.lnk')) {  }
-    if(!fs.existsSync('./Update MapSlicer-CLI.lnk')) {  }
-    spinnerValidate.success({ text: `Environment validated` });
-  } catch (err) {
-    spinnerValidate.error({ text: `Validation failed` });
-    console.log(`${chalk.bgRed('ERROR:')}`);
-    console.log(err);
-    await ui.enterToContinue();
-    console.clear();
-    process.exit(0);
-  }
-  // Create Shortcuts
-  if (!fs.existsSync('./MapSlicer-CLI.lnk')) {
-    const launchShortcut = shortcuts.create(`MapSlicer-CLI.lnk`, {
-      target: `C:\\Windows\\System32\\cmd.exe`,
-      args: `/K npx mapslicer-cli`,
-      workingDir: `${path.resolve("./")}`,
-      icon: `${path.resolve(".\\node_modules\\mapslicer-cli\\src\\MapSlicer-CLI.ico")}`
-    }, function (err) {
-      if (err) { throw Error(err) }
-    });
-  }
-  if (!fs.existsSync('./Update MapSlicer-CLI.lnk')) {
-    const updateShortcut = shortcuts.create(`Update MapSlicer-CLI.lnk`, {
-      target: `C:\\Windows\\System32\\cmd.exe`,
-      args: `/C npm i mapslicer-cli`,
-      workingDir: `${path.resolve("./")}`,
-      icon: `${path.resolve(".\\node_modules\\mapslicer-cli\\src\\MapSlicer-CLI.ico")}`
-    }, function (err) {
-      if (err) { throw Error(err) }
-    });
-  }
-}
+//   } catch (e) {
+//     await funcs.error(e);
+//   }
+//   // Check required paths are valid
+//   const spinnerValidate = createSpinner('Validating environemnt...').start();
+//   try {
+//     if(!fs.existsSync(timberbornPath)) { throw `The Timberborn folder is not accessible. The application will now close.` }
+//     if(!fs.existsSync('./entityStore')) { fs.mkdirSync('./entityStore'); }
+//     if(!fs.existsSync('./MapSlicer-CLI.lnk')) {  }
+//     if(!fs.existsSync('./Update MapSlicer-CLI.lnk')) {  }
+//     spinnerValidate.success({ text: `Environment validated` });
+//   } catch (err) {
+//     spinnerValidate.error({ text: `Validation failed` });
+//     console.log(`${chalk.bgRed('ERROR:')}`);
+//     console.log(err);
+//     await ui.enterToContinue();
+//     console.clear();
+//     process.exit(0);
+//   }
+//   // Create Shortcuts
+//   if (!fs.existsSync('./MapSlicer-CLI.lnk')) {
+//     const launchShortcut = shortcuts.create(`MapSlicer-CLI.lnk`, {
+//       target: `C:\\Windows\\System32\\cmd.exe`,
+//       args: `/K npx mapslicer-cli`,
+//       workingDir: `${path.resolve("./")}`,
+//       icon: `${path.resolve(".\\node_modules\\mapslicer-cli\\src\\MapSlicer-CLI.ico")}`
+//     }, function (err) {
+//       if (err) { throw Error(err) }
+//     });
+//   }
+//   if (!fs.existsSync('./Update MapSlicer-CLI.lnk')) {
+//     const updateShortcut = shortcuts.create(`Update MapSlicer-CLI.lnk`, {
+//       target: `C:\\Windows\\System32\\cmd.exe`,
+//       args: `/C npm i mapslicer-cli`,
+//       workingDir: `${path.resolve("./")}`,
+//       icon: `${path.resolve(".\\node_modules\\mapslicer-cli\\src\\MapSlicer-CLI.ico")}`
+//     }, function (err) {
+//       if (err) { throw Error(err) }
+//     });
+//   }
+// }
 // // Configuration Setup
 // /*
 // Used to set up the config if the file is missing
@@ -260,7 +261,7 @@ async function validateEnvironment() {
 //   }
 //   await funcs.sleep(100);
 // }
-// Configuration validation
+// // Configuration validation
 /*
 Used to validate the paths for the config input. This will add the leading and trailing slashes
 if needed.
@@ -904,5 +905,5 @@ async function helpMenu() {
 // ============= WORKFLOW ========================================================================
 // Application
 console.clear();
-await splashScreen();
+await splash.start();
 await mainMenu();
