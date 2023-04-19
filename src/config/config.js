@@ -6,7 +6,7 @@ import { createSpinner } from 'nanospinner';
 import chalk from 'chalk';
 
 // Module Constants
-const configPath = './config.json';
+const configPath = './src/config/config.json';
 
 /**
  * Synchronous.

@@ -84,7 +84,7 @@ Function to grab the world files and offer them up as options to select
 async function sliceSelectMap() {
   const spinner = createSpinner('Grabbing map files...').start();
   let timberbornMaps = [];
-  await fsPromises.readdir(globals.timberbornMapPath, (err, files) => {
+  fs.readdir(globals.timberbornMapPath, (err, files) => {
     files.forEach(file => {
     if (file.endsWith(".timber")) {
       timberbornMaps.push(file);
