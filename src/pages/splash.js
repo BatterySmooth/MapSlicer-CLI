@@ -15,16 +15,17 @@ import funcs from '../functions/general.js';
  */
 async function start() {
   const rainbowTitle = chalkAnimation.rainbow("Launching MapSlicer-CLI");
+  await initConfig();
   await validateDirectories();
   await getVersion();
   rainbowTitle.stop();
 }
 
 /**
- * Validates the application environment.
- * Checks that required files exist, config is pulled, and validated
+ * Initialise the config file and read to global varibales.
+ * Async.
  */
-async function validateDirectories() {
+async function initConfig() {
   // Check config
   try {
     if(!config.exists()) {
@@ -34,6 +35,13 @@ async function validateDirectories() {
   } catch (e) {
     await funcs.error(e);
   }
+}
+
+/**
+ * Validates the application environment.
+ * Checks that required files exist, config is pulled, and validated
+ */
+async function validateDirectories() {
   // Check required paths are valid
   try {
     console.log(globals.userHomeDir + globals.config.CONF_TIMBERBORN_DIR);
