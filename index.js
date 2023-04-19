@@ -28,23 +28,6 @@ import unslice from './src/pages/unslice.js';
 import configuration from './src/pages/configuration.js';
 import test from './src/pages/test.js';
 
-// Generate file ID
-/*
-Used to generate the prefix for the file ID when slicing
-*/
-function generateFileID() {
-  let date = new Date().toISOString();
-  date = date.replaceAll("T", " ").replaceAll(":", "-").replace(/\.[^/.]+$/, "");
-  return date;
-}
-
-// View config
-/*
-Used to view the config details and then ask if the user to change the config
-*/
-
-
-
 // ============= COMMANDS ========================================================================
 // Main operation input
 /*
@@ -218,6 +201,15 @@ async function unsliceCompleted() {
   const rainbowTitle = chalkAnimation.rainbow("Un-slicing complete!");
   await funcs.sleep(1000);
   rainbowTitle.stop();
+}
+// Generate file ID
+/*
+Used to generate the prefix for the file ID when slicing
+*/
+function generateFileID() {
+  let date = new Date().toISOString();
+  date = date.replaceAll("T", " ").replaceAll(":", "-").replace(/\.[^/.]+$/, "");
+  return date;
 }
 
 // ============= HELP ============================================================================
