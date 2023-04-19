@@ -28,7 +28,7 @@ async function display() {
     ${gradient.pastel("██████████████████████████████████████████████████████████████████████████████████████████████")}
   `);
 
-  console.log(config);
+  console.log(await config.read());
 
   console.log(funcs.generateFileName("S_2023-04-17 10-22-23 U_2023-04-17 10-22-23 cavern.timber", ".json", "U_"));
 }

@@ -23,6 +23,7 @@ import config from './src/config/config.js';
 import funcs from './src/functions/general.js';
 import ui from './src/functions/ui.js';
 import splash from './src/pages/splash.js';
+import configuration from './src/pages/configuration.js';
 import test from './src/pages/test.js';
 
 // Generate file ID
@@ -39,17 +40,7 @@ function generateFileID() {
 /*
 Used to view the config details and then ask if the user to change the config
 */
-async function viewConfig() {
-  console.log(`${chalk.bgBlackBright(' Current Configuration Settings:                                                              ')}`);
-  console.log(configJSON);
-  let configSelected = await inquirer.prompt({
-    name: 'selected',
-    type: 'list',
-    message: chalk.magentaBright('Please select the configuration parameter you wish to change\n'),
-    choices: [...Object.keys(configJSON), new inquirer.Separator(), ...["Back to Main Menu"]]
-  });
-  console.log(`Selected: ${configSelected}. Editing is not yet implemented`);
-}
+
 
 
 // ============= COMMANDS ========================================================================
@@ -67,7 +58,7 @@ async function commandAskOperation() {
       'Slice',
       'Un-Slice',
       'Help',
-      'Config',
+      'Configuration',
       'Test',
       'Quit'
     ]
@@ -452,7 +443,7 @@ async function helpShowPage1() {
       'Slice Command',
       'Un-slice Command',
       'Help Command',
-      'Config Command',
+      'Configuration Command',
       new inquirer.Separator(),
       'Back to Main Menu'
     ]
@@ -608,8 +599,12 @@ async function mainMenu() {
       await helpMenu();
       break;
     
-    case "Config":
-      await viewConfig();
+    case "Configuration":
+      let opConfig = await configuration.view();
+      if (opConfig == "Back to Main Menu") {
+        break
+      }
+      console.log(`Selected: ${opConfig}. Editing is not yet implemented`);
       await ui.backToMenu();
       break;
 
@@ -651,7 +646,7 @@ async function helpMenu() {
       await ui.backToHelp();
       break;
 
-    case "Config Command":
+    case "Configuration Command":
       ui.printHeader();
       await helpConfig();
       await ui.backToHelp();

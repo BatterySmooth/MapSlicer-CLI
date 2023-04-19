@@ -26,9 +26,10 @@ function exists() {
  */
 async function read(quiet = false) {
   let spinner;
-  if (!quiet) {createSpinner(`Pulling config...`).start();}
+  if (!quiet) {spinner = createSpinner(`Pulling config...`).start();}
   try {
     const data = await fsPromises.readFile(configPath, 'utf8');
+    if (!quiet) {spinner.success({ text: `Configuration file read` });}
     return JSON.parse(data);
   } catch (e) {
     if (!quiet) {spinner.error({ text: `Configuration file reading failed\n${err}` });}

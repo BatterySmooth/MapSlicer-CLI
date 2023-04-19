@@ -31,7 +31,7 @@ async function initConfig() {
     if(!config.exists()) {
       await config.setup();
     }
-    globals.config = await config.read(true);
+    globals.config = await config.read();
   } catch (e) {
     await funcs.error(e);
   }
