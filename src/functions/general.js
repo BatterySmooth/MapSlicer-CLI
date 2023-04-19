@@ -62,4 +62,4 @@ async function error(error) {
   process.exit(0);
 }
 
-export default { generateFileName, sleep, error }
+export default { generateFileName, sleep, error, entityCompare }
