@@ -666,5 +666,4 @@ async function helpMenu() {
 // Application
 console.clear();
 await splash.start();
-// process.exit(0);
 await mainMenu();
