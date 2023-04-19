@@ -6,7 +6,7 @@
 // Imports
 import { homedir } from 'os'
 import * as fs from 'fs';
-// import fsPromises from 'fs/promises'
+import fsPromises from 'fs/promises'
 import * as path from 'path';
 
 import chalk from 'chalk';
@@ -25,85 +25,6 @@ import ui from './src/functions/ui.js';
 import splash from './src/pages/splash.js';
 import test from './src/pages/test.js';
 
-// Globals
-const userHomeDir = homedir();
-// let configJSON;
-// let timberbornPath;
-// let timberbornMapPath;
-
-// ============= FUNCTIONS =======================================================================
-// // Sleep function
-// const sleep = (ms) => new Promise ((r) => setTimeout(r, ms));
-// // Print header
-// /*
-//   Function to show the welcome/home screen
-// */
-// async function printHeader() {
-//   console.clear();
-//   const headerText =
-// `   ███╗   ███╗ █████╗ ██████╗ ███████╗██╗     ██╗ ██████╗███████╗██████╗         ██████╗██╗     ██╗
-//    ████╗ ████║██╔══██╗██╔══██╗██╔════╝██║     ██║██╔════╝██╔════╝██╔══██╗       ██╔════╝██║     ██║
-//    ██╔████╔██║███████║██████╔╝███████╗██║     ██║██║     █████╗  ██████╔╝ ████╗ ██║     ██║     ██║
-//    ██║╚██╔╝██║██╔══██║██╔═══╝ ╚════██║██║     ██║██║     ██╔══╝  ██╔══██╗ ╚═══╝ ██║     ██║     ██║
-//    ██║ ╚═╝ ██║██║  ██║██║     ███████║███████╗██║╚██████╗███████╗██║  ██║       ╚██████╗███████╗██║
-//    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚══════╝╚══════╝╚═╝ ╚═════╝╚══════╝╚═╝  ╚═╝        ╚═════╝╚══════╝╚═╝`;
-//   console.log(gradient.pastel.multiline(headerText));
-//   console.log(`Version: ${chalk.magentaBright(version)}\n`);
-// }
-// // Enter to continue
-// /*
-// */
-// async function enterToContinue() {
-//   const answer = await inquirer.prompt({
-//     name: 'continueAction',
-//     type: 'list',
-//     message: 'Press enter to continue',
-//     choices: [
-//       'Continue'
-//     ]
-//   });
-// }
-// // Continue or Cancel
-// /*
-// */
-// async function continueOrCancel(detail) {
-//   const answer = await inquirer.prompt({
-//     name: 'answer',
-//     type: 'list',
-//     message: `${detail} Do you wish to continue?`,
-//     choices: [
-//       'Cancel',
-//       'Continue'
-//     ]
-//   });
-//   return answer
-// }
-// // Back to main menu
-// /*
-// */
-// async function backToMenu() {
-//   const answer = await inquirer.prompt({
-//     name: 'backAction',
-//     type: 'list',
-//     message: 'Press enter to go back to the main menu',
-//     choices: [
-//       'Back'
-//     ]
-//   });
-// }
-// // Back to help menu
-// /*
-// */
-// async function backToHelp() {
-//   const answer = await inquirer.prompt({
-//     name: 'backAction',
-//     type: 'list',
-//     message: 'Press enter to go back to the help menu',
-//     choices: [
-//       'Back'
-//     ]
-//   });
-// }
 // Generate file ID
 /*
 Used to generate the prefix for the file ID when slicing
@@ -113,168 +34,7 @@ function generateFileID() {
   date = date.replaceAll("T", " ").replaceAll(":", "-").replace(/\.[^/.]+$/, "");
   return date;
 }
-// // Generate file name
-// function generateFileName(fileName, fileExtension, prefix) {
-//   let date = new Date().toISOString();
-//   date = date                                                       // Create new formatted date:
-//     .replaceAll("T", " ")                                           // Remove 'T' from ISO string
-//     .replaceAll(":", "-")                                           // Replace ':' with '-'
-//     .replace(/\.[^/.]+$/, "");                                      // Remove milliseconds and 'Z'
-//   return prefix + date + " " + fileName                             // Format the new prefix & DateTime
-//     .replace(/^(U_|S_)*(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )*/, "")  // Remove date-time prefixes
-//     .replace(/\.[^\/.]+$/, fileExtension);                          // Replace file extension
-// }
-// Entity sorting filter
-/*
-Function used when filtering entities by Z axis after un-slice
-*/
-function entityCompare(a, b) {
-  if ( a.Components.BlockObject.Coordinates.Z < b.Components.BlockObject.Coordinates.Z ){
-    return -1;
-  }
-  if ( a.Components.BlockObject.Coordinates.Z > b.Components.BlockObject.Coordinates.Z ){
-    return 1;
-  }
-  return 0;
-}
-// // Test function
-// async function test() {
-//   console.log(`
-//   Full Colours:
-//     ${chalk.bgBlack("bgBlack")} \t \t ${chalk.black("black")} \t \t ${chalk.bgBlackBright("bgBlackBright")} \t \t ${chalk.blackBright("blackBright")}
-//     ${chalk.bgBlue("bgBlue")} \t \t ${chalk.blue("blue")} \t \t ${chalk.bgBlueBright("bgBlueBright")} \t \t ${chalk.blueBright("blueBright")}
-//     ${chalk.bgCyan("bgCyan")} \t \t ${chalk.cyan("cyan")} \t \t ${chalk.bgCyanBright("bgCyanBright")} \t \t ${chalk.cyanBright("cyanBright")}
-//     ${chalk.bgGreen("bgGreen")} \t \t ${chalk.green("green")} \t \t ${chalk.bgGreenBright("bgGreenBright")} \t \t ${chalk.greenBright("greenBright")}
-//     ${chalk.bgMagenta("bgMagenta")} \t \t ${chalk.magenta("magenta")} \t ${chalk.bgMagentaBright("bgMagentaBright")} \t ${chalk.magentaBright("magentaBright")}
-//     ${chalk.bgRed("bgRed")} \t \t ${chalk.red("red")} \t \t ${chalk.bgRedBright("bgRedBright")} \t \t ${chalk.redBright("redBright")}
-//     ${chalk.bgWhite("bgWhite")} \t \t ${chalk.white("white")} \t \t ${chalk.bgWhiteBright("bgWhiteBright")} \t \t ${chalk.whiteBright("whiteBright")}
-//     ${chalk.bgYellow("bgYellow")} \t \t ${chalk.yellow("yellow")} \t ${chalk.bgYellowBright("bgYellowBright")} \t ${chalk.yellowBright("yellowBright")}
-//   Limited Colours:
-//     ${chalk.bgGray("bgGray")} \t \t ${chalk.gray("gray")}
-//     ${chalk.bgGrey("bgGrey")} \t \t ${chalk.grey("grey")}
-//   Gradient:
-//     ${gradient.pastel("██████████████████████████████████████████████████████████████████████████████████████████████")}
-//   `);
 
-//   console.log(fsFunc.generateFileName("2023-04-17 10-22-23 2023-04-17 10-22-23 cavern.timber", ".json", "U_"));
-// }
-
-// ============= WELCOME & CONFIG ================================================================
-// Splash screen
-// /*
-// Splash screen for the application. It will also validate the environment
-// */
-// async function splashScreen() {
-//   const rainbowTitle = chalkAnimation.rainbow("Launching MapSlicer-CLI");
-//   await validateEnvironment();
-//   rainbowTitle.stop();
-// }
-// Validation function
-/*
-Validates the environment and performs checks prior to starting
-*/
-// async function validateEnvironment() {
-//   try {
-//     if(!config.exists()) {
-//       await config.setup();
-//     }
-//     globals.config = config.read();
-
-//   } catch (e) {
-//     await funcs.error(e);
-//   }
-//   // Check required paths are valid
-//   const spinnerValidate = createSpinner('Validating environemnt...').start();
-//   try {
-//     if(!fs.existsSync(timberbornPath)) { throw `The Timberborn folder is not accessible. The application will now close.` }
-//     if(!fs.existsSync('./entityStore')) { fs.mkdirSync('./entityStore'); }
-//     if(!fs.existsSync('./MapSlicer-CLI.lnk')) {  }
-//     if(!fs.existsSync('./Update MapSlicer-CLI.lnk')) {  }
-//     spinnerValidate.success({ text: `Environment validated` });
-//   } catch (err) {
-//     spinnerValidate.error({ text: `Validation failed` });
-//     console.log(`${chalk.bgRed('ERROR:')}`);
-//     console.log(err);
-//     await ui.enterToContinue();
-//     console.clear();
-//     process.exit(0);
-//   }
-//   // Create Shortcuts
-//   if (!fs.existsSync('./MapSlicer-CLI.lnk')) {
-//     const launchShortcut = shortcuts.create(`MapSlicer-CLI.lnk`, {
-//       target: `C:\\Windows\\System32\\cmd.exe`,
-//       args: `/K npx mapslicer-cli`,
-//       workingDir: `${path.resolve("./")}`,
-//       icon: `${path.resolve(".\\node_modules\\mapslicer-cli\\src\\MapSlicer-CLI.ico")}`
-//     }, function (err) {
-//       if (err) { throw Error(err) }
-//     });
-//   }
-//   if (!fs.existsSync('./Update MapSlicer-CLI.lnk')) {
-//     const updateShortcut = shortcuts.create(`Update MapSlicer-CLI.lnk`, {
-//       target: `C:\\Windows\\System32\\cmd.exe`,
-//       args: `/C npm i mapslicer-cli`,
-//       workingDir: `${path.resolve("./")}`,
-//       icon: `${path.resolve(".\\node_modules\\mapslicer-cli\\src\\MapSlicer-CLI.ico")}`
-//     }, function (err) {
-//       if (err) { throw Error(err) }
-//     });
-//   }
-// }
-// // Configuration Setup
-// /*
-// Used to set up the config if the file is missing
-// */
-// async function setupConfig() {
-//   // Take config inputs and format start and end slashes
-//   let answerDirectory = await inquirer.prompt({
-//     name: 'timberbornDirectory',
-//     type: 'input',
-//     message: `Please enter the path for the Timberborn save folder relative to your home directory\n(This is usually stored in your documents folder)\n`,
-//     default: '/Documents/Timberborn/'
-//   });
-//   let timberbornDirectory = answerDirectory.timberbornDirectory;
-
-//   let answerMapDirectory = await inquirer.prompt({
-//     name: 'timberbornMapDirectory',
-//     type: 'input',
-//     message: `Please enter the path for the Timberborn map folder relative to the Timberborn folder\n(This is almost always the default provided)\n`,
-//     default: 'Maps/'
-//   });
-//   let timberbornMapDirectory = answerMapDirectory.timberbornMapDirectory;
-
-//   let configOutput = {
-//     "CONF_TIMBERBORN_DIR": timberbornDirectory,
-//     "CONF_TIMBERBORN_MAP_DIR": timberbornMapDirectory
-//   }
-//   // Validate config paths
-//   let validatedConfig = validateConfig(JSON.stringify(configOutput));
-//   // Write config file
-//   try {
-//     fs.writeFile(`./config.json`, validatedConfig, 'utf8', (err) => {
-//       if (err) {
-//         console.log(err);
-//       }
-//     });
-//   } catch (e) {
-//     console.log(e);
-//   }
-//   await funcs.sleep(100);
-// }
-// // Configuration validation
-/*
-Used to validate the paths for the config input. This will add the leading and trailing slashes
-if needed.
-Takes in an JSON strigigied object and returns a JSON strigified object.
-*/
-// function validateConfig(inputConfig) {
-//   let configJSON = JSON.parse(inputConfig);
-//   // Add slashes to front and end, and replace all slashes with single forward slash
-//   configJSON.CONF_TIMBERBORN_DIR = configJSON.CONF_TIMBERBORN_DIR.replace(/(^|$)/g, "/").replace(/(\\|\/)+/g,"/")
-//   // Remove all slashes from 'Maps' input and add a slash at the end
-//   configJSON.CONF_TIMBERBORN_MAP_DIR = `${configJSON.CONF_TIMBERBORN_MAP_DIR.replace(/(\\|\/)+/g, "")}/`
-//   return JSON.stringify(configJSON);
-// }
 // View config
 /*
 Used to view the config details and then ask if the user to change the config
@@ -906,4 +666,5 @@ async function helpMenu() {
 // Application
 console.clear();
 await splash.start();
+// process.exit(0);
 await mainMenu();

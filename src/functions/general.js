@@ -8,7 +8,7 @@ import ui from './ui.js';
  * Sleep function.
  * Sets timeout for the input milliseconds.
  * Ensure to call with await.
- * @param {*} ms
+ * @param {integer} ms
  * @returns 
  */
 const sleep = (ms) => new Promise ((r) => setTimeout(r, ms));
@@ -29,6 +29,23 @@ function generateFileName(fileName, fileExtension, prefix) {
   return prefix + date + " " + fileName                             // Format the new prefix & DateTime
     .replace(/^(U_|S_)*(\d\d\d\d-\d\d-\d\d \d\d-\d\d-\d\d )*/, "")  // Remove date-time prefixes
     .replace(/\.[^\/.]+$/, fileExtension);                          // Replace file extension
+}
+
+/**
+ * Entity sorting filter.
+ * Used when filtering entities by Z axis after un-slice.
+ * @param {object} a 
+ * @param {object} b 
+ * @returns 
+ */
+function entityCompare(a, b) {
+  if ( a.Components.BlockObject.Coordinates.Z < b.Components.BlockObject.Coordinates.Z ){
+    return -1;
+  }
+  if ( a.Components.BlockObject.Coordinates.Z > b.Components.BlockObject.Coordinates.Z ){
+    return 1;
+  }
+  return 0;
 }
 
 /**

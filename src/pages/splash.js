@@ -3,6 +3,7 @@ import * as fs from 'fs';
 import fsPromises from 'fs/promises';
 import * as path from 'path';
 import chalkAnimation from 'chalk-animation';
+import * as shortcuts from 'windows-shortcuts';
 
 // Local imports
 import globals from '../variables/globals.js';
@@ -29,13 +30,14 @@ async function validateDirectories() {
     if(!config.exists()) {
       await config.setup();
     }
-    globals.config = await config.read();
+    globals.config = await config.read(true);
   } catch (e) {
     await funcs.error(e);
   }
   // Check required paths are valid
   try {
-    // if(!fs.existsSync(timberbornPath)) { throw `The Timberborn folder is not accessible. The application will now close.` }
+    console.log(globals.userHomeDir + globals.config.CONF_TIMBERBORN_DIR);
+    if(!fs.existsSync(globals.userHomeDir + globals.config.CONF_TIMBERBORN_DIR)) { throw `The Timberborn folder is not accessible. The application will now close.` }
     if(!fs.existsSync('./entityStore')) { fs.mkdirSync('./entityStore'); }
   } catch (e) {
     funcs.error(e)
