@@ -20,7 +20,7 @@ let unsliceNewWorldJSON;
 
 /**
  * Menu handler for the un-slice page.
- * @returns {void}
+ * @returns
  */
 async function view() {
   // Select map to unslice
@@ -58,6 +58,7 @@ async function view() {
   // Un-slice complete!
   await unsliceCompleted();
   await ui.enterToContinue();
+  return;
 }
 
 // Select map

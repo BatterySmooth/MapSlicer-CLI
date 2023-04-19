@@ -1,13 +1,10 @@
-export default { display }
 // Node imports
 import chalk from 'chalk';
 import gradient from 'gradient-string';
 // Local imports
-import funcs from '../functions/general.js';
-import config from '../config/config.js'
 
-// Test function
 /**
+ * Test function.
  * Prints displays test data to the console.
  */
 async function display() {
@@ -27,8 +24,6 @@ async function display() {
   Gradient:
     ${gradient.pastel("██████████████████████████████████████████████████████████████████████████████████████████████")}
   `);
-
-  console.log(await config.read());
-
-  console.log(funcs.generateFileName("S_2023-04-17 10-22-23 U_2023-04-17 10-22-23 cavern.timber", ".json", "U_"));
 }
+
+export default { display }
