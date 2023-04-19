@@ -43,8 +43,9 @@ async function initConfig() {
  */
 async function validateDirectories() {
   // Check required paths are valid
+  globals.timberbornMapPath = globals.userHomeDir + globals.config.CONF_TIMBERBORN_DIR + globals.config.CONF_TIMBERBORN_MAP_DIR;
   try {
-    console.log(globals.userHomeDir + globals.config.CONF_TIMBERBORN_DIR);
+    console.log(globals.timberbornMapPath);
     if(!fs.existsSync(globals.userHomeDir + globals.config.CONF_TIMBERBORN_DIR)) { throw `The Timberborn folder is not accessible. The application will now close.` }
     if(!fs.existsSync('./entityStore')) { fs.mkdirSync('./entityStore'); }
   } catch (e) {
