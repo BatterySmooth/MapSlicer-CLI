@@ -12,7 +12,7 @@ import funcs from '../functions/general.js';
  * @returns {string}
  */
 async function view() {
-  console.log(`${chalk.bgBlackBright(' Current Configuration Settings:                                                              ')}`);
+  console.log(`    ${chalk.bgBlackBright(' Current Configuration Settings:                                                            ')}`);
   console.log(globals.config);
   let configSelected = await inquirer.prompt({
     name: 'selected',
