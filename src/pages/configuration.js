@@ -23,4 +23,10 @@ async function view() {
   return configSelected.selected;
 }
 
+async function edit() {
+  console.log(`
+  ${chalk.bgMagentaBright(' Edit Configuration                                                                           ')}
+  `)
+}
+
 export default { view }
