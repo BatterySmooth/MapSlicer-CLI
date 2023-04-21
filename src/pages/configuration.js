@@ -12,8 +12,18 @@ import funcs from '../functions/general.js';
  * @returns {string}
  */
 async function view() {
-  console.log(`    ${chalk.bgBlackBright(' Current Configuration Settings:                                                            ')}`);
-  console.log(globals.config);
+  console.log(`    ${chalk.bgRedBright(' Current Configuration Settings:                                                              ')}
+
+    ${chalk.redBright('╭────────────────────────────────────────────────────────────────────────────────────────────╮')}
+    ${chalk.redBright('│ CONF_TIMBERBORN_PATH')}\t The path of your Timberborn user files                          ${chalk.redBright('│')}
+    ${chalk.redBright('│ CONF_TIMBERBORN_MAP_PATH')}\t The path of your Timberborn map folder                          ${chalk.redBright('│')}
+    ${chalk.redBright('│ CONF_SLICED_PREFIX')}\t The prefix used for sliced map files                            ${chalk.redBright('│')}
+    ${chalk.redBright('│ CONF_UNSLICED_PREFIX')}\t The prefix used for un-sliced map files                         ${chalk.redBright('│')}
+    ${chalk.redBright('╰────────────────────────────────────────────────────────────────────────────────────────────╯')}
+  `);
+
+  // console.log(globals.config);
+
   let configSelected = await inquirer.prompt({
     name: 'selected',
     type: 'list',
