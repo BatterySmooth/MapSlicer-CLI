@@ -17,8 +17,8 @@ async function view() {
     ${chalk.redBright('╭────────────────────────────────────────────────────────────────────────────────────────────╮')}
     ${chalk.redBright('│ CONF_TIMBERBORN_PATH')}\t ${globals.CONF_TIMBERBORN_PATH}                          ${chalk.redBright('│')}
     ${chalk.redBright('│ CONF_TIMBERBORN_MAP_PATH')}\t ${globals.CONF_TIMBERBORN_MAP_PATH}                          ${chalk.redBright('│')}
-    ${chalk.redBright('│ CONF_SLICED_PREFIX')}\t The prefix used for sliced map files                            ${chalk.redBright('│')}
-    ${chalk.redBright('│ CONF_UNSLICED_PREFIX')}\t The prefix used for un-sliced map files                         ${chalk.redBright('│')}
+    ${chalk.redBright('│ CONF_SLICED_PREFIX')}\t ${globals.CONF_SLICED_PREFIX}                            ${chalk.redBright('│')}
+    ${chalk.redBright('│ CONF_UNSLICED_PREFIX')}\t ${globals.CONF_UNSLICED_PREFIX}                         ${chalk.redBright('│')}
     ${chalk.redBright('╰────────────────────────────────────────────────────────────────────────────────────────────╯')}
   `);
 
