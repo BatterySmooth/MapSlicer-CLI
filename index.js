@@ -73,12 +73,7 @@ async function mainMenu() {
       break;
     
     case "Configuration":
-      let opConfig = await configuration.view();
-      if (opConfig == "Back to Main Menu") {
-        break
-      }
-      console.log(`Selected: ${opConfig}. Editing is not yet implemented`);
-      await ui.backToMenu();
+      await configuration.view();
       break;
 
     case "Test":

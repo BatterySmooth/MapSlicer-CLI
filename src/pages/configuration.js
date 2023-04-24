@@ -6,6 +6,7 @@ import inquirer from 'inquirer';
 import globals from '../variables/globals.js';
 import config from '../config/config.js';
 import funcs from '../functions/general.js';
+import ui from '../functions/ui.js';
 
 /**
  * Shows the configuration page and returns the selected config item.
@@ -26,10 +27,16 @@ async function view() {
     message: chalk.magentaBright('Please select the configuration parameter you wish to change\n'),
     choices: [...Object.keys(globals.config), new inquirer.Separator(), ...["Back to Main Menu"]]
   });
-  return configSelected.selected;
+
+  if (configSelected.selected == "Back to Main Menu") {
+    return;
+  }
+  console.log(`Selected: ${configSelected.selected}. Editing is not yet implemented`);
+  await ui.backToMenu();
+  return;
 }
 
-async function edit() {
+async function edit(configKey, configValue) {
   console.log(`
   ${chalk.bgMagentaBright(' Edit Configuration                                                                           ')}
   `)
