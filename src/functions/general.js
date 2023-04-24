@@ -57,8 +57,6 @@ function entityCompare(a, b) {
 async function error(error) {
   console.log(`${chalk.bgRed(' ERROR: ')}`);
   console.log(error);
-  await ui.enterToContinue();
-  console.clear();
   process.exit(0);
 }
 

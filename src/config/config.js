@@ -13,7 +13,7 @@ const configPath = './src/config/config.json';
  * Checks whether the config file exists.
  * @returns
  */
-function exists() {
+async function exists() {
   return fs.existsSync(configPath);
 }
 
@@ -95,30 +95,30 @@ async function setup() {
   console.log(`${chalk.bgRed('Config Missing - Set-up Required')}`);
   // Take config inputs and format start and end slashes
   let answerDirectory = await inquirer.prompt({
-    name: 'timberbornDirectory',
+    name: 'answer',
     type: 'input',
     message: `Please enter the path for the Timberborn save folder relative to your home directory\n(This is usually stored in your documents folder)\n`,
     default: '/Documents/Timberborn/'
   });
-  let timberbornDirectory = answerDirectory.timberbornDirectory;
 
   let answerMapDirectory = await inquirer.prompt({
-    name: 'timberbornMapDirectory',
+    name: 'answer',
     type: 'input',
     message: `Please enter the path for the Timberborn map folder relative to the Timberborn folder\n(This is almost always the default provided)\n`,
     default: 'Maps/'
   });
-  let timberbornMapDirectory = answerMapDirectory.timberbornMapDirectory;
 
   let configOutput = {
-    "CONF_TIMBERBORN_DIR": timberbornDirectory,
-    "CONF_TIMBERBORN_MAP_DIR": timberbornMapDirectory
+    "CONF_TIMBERBORN_DIR": answerDirectory.answer,
+    "CONF_TIMBERBORN_MAP_DIR": answerMapDirectory.answer,
+    "CONF_SLICED_PREFIX": "S_",
+    "CONF_UNSLICED_PREFIX": "U_"
   }
   // Validate config paths
   let validatedConfig = validate(JSON.stringify(configOutput));
   // Write config file
   try {
-    fs.writeFile(`./config.json`, validatedConfig, 'utf8', (err) => {
+    fs.writeFile(configPath, validatedConfig, 'utf8', (err) => {
       if (err) {
         console.log(err);
       }
@@ -129,7 +129,7 @@ async function setup() {
   // ***** Why is this needed? *****
   // await funcs.sleep(100);
 }
-// Configuration validation
+
 /**
  * Synchronous.
  * Used to validate the paths for the config input. This will add the leading

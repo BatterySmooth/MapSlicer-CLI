@@ -2,7 +2,6 @@
 import * as fs from 'fs';
 import fsPromises from 'fs/promises';
 import * as path from 'path';
-import chalkAnimation from 'chalk-animation';
 import * as shortcuts from 'windows-shortcuts';
 
 // Local imports
@@ -14,11 +13,21 @@ import funcs from '../functions/general.js';
  * Display slash screen while calling the environment validation.
  */
 async function start() {
-  const rainbowTitle = chalkAnimation.rainbow("Launching MapSlicer-CLI");
+  await validateConfig();
   await initConfig();
   await validateDirectories();
   await getVersion();
-  rainbowTitle.stop();
+}
+
+async function validateConfig() {
+  let configFile = await config.read();
+  if (!(
+    'CONF_TIMBERBORN_DIR' in configFile &&
+    'CONF_TIMBERBORN_MAP_DIR' in configFile &&
+    'CONF_SLICED_PREFIX' in configFile &&
+    'CONF_UNSLICED_PREFIX' in configFile)) {
+      await config.setup();
+  }
 }
 
 /**
@@ -28,9 +37,9 @@ async function start() {
 async function initConfig() {
   // Check config
   try {
-    if(!config.exists()) {
-      await config.setup();
-    }
+    // if(!config.exists()) {
+    //   await config.setup();
+    // }
     globals.config = await config.read();
   } catch (e) {
     await funcs.error(e);

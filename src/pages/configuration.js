@@ -13,6 +13,8 @@ import ui from '../functions/ui.js';
  * @returns {string}
  */
 async function view() {
+  console.clear();
+  ui.printHeader();
   console.log(`    ${chalk.bgRedBright(' Current Configuration Settings:                                                              ')}
 
     ${chalk.redBright('CONF_TIMBERBORN_PATH')}\t ${globals.config.CONF_TIMBERBORN_DIR}
@@ -31,15 +33,23 @@ async function view() {
   if (configSelected.selected == "Back to Main Menu") {
     return;
   }
-  console.log(`Selected: ${configSelected.selected}. Editing is not yet implemented`);
-  await ui.backToMenu();
+
+  let configDefault = globals.config[configSelected.selected];
+  await edit(configSelected.selected, configDefault);
   return;
 }
 
 async function edit(configKey, configValue) {
-  console.log(`
-  ${chalk.bgMagentaBright(' Edit Configuration                                                                           ')}
-  `)
+  let newConfig = await inquirer.prompt({
+    name: 'answer',
+    type: 'input',
+    message: `Please enter the new value to use for the selected config setting\n`,
+    default: configValue
+  });
+  if (newConfig.answer != configValue) {
+    config.write({configKey, configValue}, true);
+  }
+  return;
 }
 
 export default { view }

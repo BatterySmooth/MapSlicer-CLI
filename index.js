@@ -4,23 +4,23 @@
 // Height: 32
 
 // Imports
-import { homedir } from 'os'
-import * as fs from 'fs';
-import fsPromises from 'fs/promises';
-import * as path from 'path';
+// import { homedir } from 'os'
+// import * as fs from 'fs';
+// import fsPromises from 'fs/promises';
+// import * as path from 'path';
 
-import chalk from 'chalk';
+// import chalk from 'chalk';
 import inquirer from 'inquirer';
-import gradient from 'gradient-string';
-import chalkAnimation from 'chalk-animation';
-import { createSpinner } from 'nanospinner';
-import AdmZip from 'adm-zip';
-import * as shortcuts from 'windows-shortcuts';
+// import gradient from 'gradient-string';
+// import chalkAnimation from 'chalk-animation';
+// import { createSpinner } from 'nanospinner';
+// import AdmZip from 'adm-zip';
+// import * as shortcuts from 'windows-shortcuts';
 
 // Local imports
-import globals from './src/variables/globals.js';
-import config from './src/config/config.js';
-import funcs from './src/functions/general.js';
+// import globals from './src/variables/globals.js';
+// import config from './src/config/config.js';
+// import funcs from './src/functions/general.js';
 import ui from './src/functions/ui.js';
 import splash from './src/pages/splash.js';
 import slice from './src/pages/slice.js';
