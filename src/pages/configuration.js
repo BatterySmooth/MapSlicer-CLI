@@ -33,9 +33,9 @@ async function view() {
   if (configSelected.selected == "Back to Main Menu") {
     return;
   }
-
-  let configDefault = globals.config[configSelected.selected];
-  await edit(configSelected.selected, configDefault);
+  // WIP:
+  // let configDefault = globals.config[configSelected.selected];
+  // await edit(configSelected.selected, configDefault);
   return;
 }
 
@@ -47,9 +47,9 @@ async function edit(configKey, configValue) {
     default: configValue
   });
   if (newConfig.answer != configValue) {
-    config.write({configKey, configValue}, true);
+    let newConfigValue = newConfig.answer;
+    await config.write({configKey, newConfigValue}, true);
   }
-  return;
 }
 
 export default { view }

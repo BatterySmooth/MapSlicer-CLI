@@ -5,6 +5,9 @@ import inquirer from 'inquirer';
 import { createSpinner } from 'nanospinner';
 import chalk from 'chalk';
 
+import globals from '../variables/globals.js';
+import funcs from '../functions/general.js';
+
 // Module Constants
 const configPath = './src/config/config.json';
 
@@ -50,7 +53,10 @@ async function write({key, value}, quiet = false) {
   try {
     let spinner;
     if (!quiet) {spinner = createSpinner(`Writing config...`).start();}
-    let config = read(true);
+    // let config = await read(true);
+    console.log(config);
+    
+
     let newValue;
     switch (key) {
       case 'CONF_TIMBERBORN_DIR':
@@ -73,9 +79,9 @@ async function write({key, value}, quiet = false) {
         newValue = value;
         break;
     }
-    await config;
-    config[key] = newValue;
-    fs.writeFileSync(configPath, JSON.stringify(config));
+    // await config;
+    globals.config[key] = newValue;
+    // fs.writeFileSync(configPath, JSON.stringify(globals.config));
     if (!quiet) {spinner.success({ text: `Configuration data saved` });}
     return true;
   } catch {

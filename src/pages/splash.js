@@ -37,9 +37,6 @@ async function validateConfig() {
 async function initConfig() {
   // Check config
   try {
-    // if(!config.exists()) {
-    //   await config.setup();
-    // }
     globals.config = await config.read();
   } catch (e) {
     await funcs.error(e);
