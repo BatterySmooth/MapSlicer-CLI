@@ -14,15 +14,11 @@ import funcs from '../functions/general.js';
 async function view() {
   console.log(`    ${chalk.bgRedBright(' Current Configuration Settings:                                                              ')}
 
-    ${chalk.redBright('╭────────────────────────────────────────────────────────────────────────────────────────────╮')}
-    ${chalk.redBright('│ CONF_TIMBERBORN_PATH')}\t ${globals.CONF_TIMBERBORN_PATH}                          ${chalk.redBright('│')}
-    ${chalk.redBright('│ CONF_TIMBERBORN_MAP_PATH')}\t ${globals.CONF_TIMBERBORN_MAP_PATH}                          ${chalk.redBright('│')}
-    ${chalk.redBright('│ CONF_SLICED_PREFIX')}\t ${globals.CONF_SLICED_PREFIX}                            ${chalk.redBright('│')}
-    ${chalk.redBright('│ CONF_UNSLICED_PREFIX')}\t ${globals.CONF_UNSLICED_PREFIX}                         ${chalk.redBright('│')}
-    ${chalk.redBright('╰────────────────────────────────────────────────────────────────────────────────────────────╯')}
+    ${chalk.redBright('CONF_TIMBERBORN_PATH')}\t ${globals.config.CONF_TIMBERBORN_DIR}
+    ${chalk.redBright('CONF_TIMBERBORN_MAP_PATH')}\t ${globals.config.CONF_TIMBERBORN_MAP_DIR}
+    ${chalk.redBright('CONF_SLICED_PREFIX')}\t\t ${globals.config.CONF_SLICED_PREFIX}
+    ${chalk.redBright('CONF_UNSLICED_PREFIX')}\t ${globals.config.CONF_UNSLICED_PREFIX}
   `);
-
-  // console.log(globals.config);
 
   let configSelected = await inquirer.prompt({
     name: 'selected',

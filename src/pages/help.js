@@ -125,8 +125,8 @@ async function helpConfig() {
     ${chalk.redBright('╭────────────────────────────────────────────────────────────────────────────────────────────╮')}
     ${chalk.redBright('│')} Configuration Parameter                                                                    ${chalk.redBright('│')}
     ${chalk.redBright('├────────────────────────────────────────────────────────────────────────────────────────────┤')}
-    ${chalk.redBright('│ CONF_TIMBERBORN_PATH')}\t The path of your Timberborn user files                          ${chalk.redBright('│')}
-    ${chalk.redBright('│ CONF_TIMBERBORN_MAP_PATH')}\t The path of your Timberborn map folder                          ${chalk.redBright('│')}
+    ${chalk.redBright('│ CONF_TIMBERBORN_DIR')}\t The path of your Timberborn user files                          ${chalk.redBright('│')}
+    ${chalk.redBright('│ CONF_TIMBERBORN_MAP_DIR')}\t The path of your Timberborn map folder                          ${chalk.redBright('│')}
     ${chalk.redBright('│ CONF_SLICED_PREFIX')}\t The prefix used for sliced map files                            ${chalk.redBright('│')}
     ${chalk.redBright('│ CONF_UNSLICED_PREFIX')}\t The prefix used for un-sliced map files                         ${chalk.redBright('│')}
     ${chalk.redBright('╰────────────────────────────────────────────────────────────────────────────────────────────╯')}

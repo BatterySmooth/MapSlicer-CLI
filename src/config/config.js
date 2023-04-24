@@ -147,92 +147,10 @@ function validate(inputConfig) {
   configJSON.CONF_TIMBERBORN_MAP_DIR = `${configJSON.CONF_TIMBERBORN_MAP_DIR.replace(/(\\|\/)+/g, "")}/`;
   return JSON.stringify(configJSON);
 }
-// View config
-/**
- * Used to view the config details and then ask if the user to change the config.
- * Legacy name: viewConfig.
- */
-async function view() {
-  console.log(`${chalk.bgBlackBright(' Current Configuration Settings:                                                              ')}`);
-  console.log(configJSON);
-  let configSelected = await inquirer.prompt({
-    name: 'selected',
-    type: 'list',
-    message: chalk.magentaBright('Please select the configuration parameter you wish to change\n'),
-    choices: [...Object.keys(configJSON), new inquirer.Separator(), ...["Back to Main Menu"]]
-  });
-  console.log(`Selected: ${configSelected}. Editing is not yet implemented`);
-}
-
-
-/**
- * Config class
- * WIP, no worky
- */
-class Config {
-  /**
-   * Initialises an instance of the Config class.
-   * @param {*} defaults 
-   */
-  constructor() {
-    // Define properties
-    this.timberbornDir = config.CONF_TIMBERBORN_DIR || '/Documents/Timberborn/';
-    this.timberbornMapDir = config.CONF_TIMBERBORN_MAP_DIR || "Maps/";
-    this.slicedPrefix = config.CONF_SLICED_PREFIX || "S_";
-    this.unslicedPrefix = config.CONF_UNSLICED_PREFIX || "U_";
-  }
-
-  /**
-   * Sets the Timberborn file path, with validation
-   * @param {string} path
-   */
-  set timberbornDir (path) {
-    this.timberbornDir = path
-      // Add a '/' to the start and end of the path
-      .replace(/(^|$)/g, "/")
-      // Replace all groups of slashes to a single '/'
-      .replace(/(\\|\/)+/g,"/");      
-  }
-
-  /**
-   * Sets the Timberborn Maps file path, with validation
-   * @param {string} path
-   */
-  set timberbornMapDir (path) {
-    this.timberbornMapDir = path
-      // Replace all slashes with blank
-      .replace(/(\\|\/)+/g, "");
-  }
-
-  /**
-   * Sets the sliced prefix for files
-   * @param {string} string
-   */
-  set slicedPrefix (string) {
-    this.slicedPrefix = string;
-  }
-
-  /**
-   * Sets the unsliced prefix for files
-   * @param {string} string
-   */
-  set unslicedPrefix (string) {
-    this.unslicedPrefix = string;
-  }
-  
-  
-
-}
 
 export default {
   exists,
   read,
   write,
   setup
-  // setup,
-  // validate,
-  // view,
-  // configJSON,
-  // timberbornPath,
-  // timberbornMapPath
 }
