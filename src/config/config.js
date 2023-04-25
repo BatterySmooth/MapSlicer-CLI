@@ -40,6 +40,10 @@ async function read(quiet = false) {
   }
 }
 
+async function cache(key, value) {
+  
+}
+
 /**
  * Writes the modified key value pair to the config file.
  * Handles its own spinner.
@@ -49,14 +53,12 @@ async function read(quiet = false) {
  * @param {boolean} quiet - If true, will not generate a spinner
  * @returns {boolean}
  */
-async function write({key, value}, quiet = false) {
+async function write(key, value, quiet = false) {
   try {
     let spinner;
     if (!quiet) {spinner = createSpinner(`Writing config...`).start();}
-    // let config = await read(true);
-    console.log(config);
-    
-
+    let config = read(true);
+    // console.log(`Key: ${key} | Val: ${value}`);
     let newValue;
     switch (key) {
       case 'CONF_TIMBERBORN_DIR':
@@ -79,14 +81,15 @@ async function write({key, value}, quiet = false) {
         newValue = value;
         break;
     }
-    // await config;
+    await config;
     globals.config[key] = newValue;
-    // fs.writeFileSync(configPath, JSON.stringify(globals.config));
+    // console.log(globals.config);
+    let out = await fsPromises.writeFile(configPath, JSON.stringify(globals.config), {encoding: "utf8"});
     if (!quiet) {spinner.success({ text: `Configuration data saved` });}
-    return true;
-  } catch {
+    return out;
+  } catch (e) {
     if (!quiet) {spinner.error({ text: `Configuration failed to save` });}
-    return false;
+    funcs.error(e);
   }
 }
 
@@ -158,5 +161,6 @@ export default {
   exists,
   read,
   write,
-  setup
+  setup,
+  // cache
 }

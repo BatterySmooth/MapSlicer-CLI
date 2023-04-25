@@ -34,8 +34,8 @@ async function view() {
     return;
   }
   // WIP:
-  // let configDefault = globals.config[configSelected.selected];
-  // await edit(configSelected.selected, configDefault);
+  let configDefault = globals.config[configSelected.selected];
+  await edit(configSelected.selected, configDefault);
   return;
 }
 
@@ -48,7 +48,7 @@ async function edit(configKey, configValue) {
   });
   if (newConfig.answer != configValue) {
     let newConfigValue = newConfig.answer;
-    await config.write({configKey, newConfigValue}, true);
+    config.write(configKey, newConfigValue, true);
   }
 }
 
