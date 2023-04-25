@@ -10,7 +10,7 @@ import funcs from '../functions/general.js';
 
 // Module Constants
 const configPath = './src/config/config.json';
-
+''
 /**
  * Synchronous.
  * Checks whether the config file exists.
