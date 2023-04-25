@@ -40,10 +40,6 @@ async function read(quiet = false) {
   }
 }
 
-async function cache(key, value) {
-  
-}
-
 /**
  * Writes the modified key value pair to the config file.
  * Handles its own spinner.
@@ -161,6 +157,5 @@ export default {
   exists,
   read,
   write,
-  setup,
-  // cache
+  setup
 }
